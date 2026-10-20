@@ -205,6 +205,18 @@ describe('DEPLOY.md', () => {
   it('never uses the forbidden word', () => {
     expect(md.toLowerCase()).not.toContain(FORBIDDEN_WORD);
   });
+
+  it('names page URLs with the trailing slash, since trailingSlash is always and a slashless path redirects', () => {
+    const checks = md.slice(md.indexOf('## Checks after a deploy'));
+    expect(checks).toContain('https://www.freeholders.org/standard/');
+    expect(checks).toContain('https://freeholders.org/standard/');
+    // Every freeholders.org URL in the runbook that is a page (no file extension) ends in a slash.
+    const pageUrls = [...md.matchAll(/https:\/\/(?:www\.)?freeholders\.org(\/[^\s`"')]*)?/g)]
+      .map((m) => m[1] ?? '/')
+      .filter((path) => !/\.[a-z0-9]+$/i.test(path) && path !== '/no-such-page');
+    expect(pageUrls.length).toBeGreaterThan(0);
+    for (const path of pageUrls) expect(path, path).toMatch(/\/$/);
+  });
 });
 
 describe('package.json', () => {

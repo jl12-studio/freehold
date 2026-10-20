@@ -122,5 +122,5 @@ It should print the policy beginning `default-src 'self'`. Then:
 
 1. Open `https://freeholders.org/feed.xml`. It should show the RSS feed.
 2. Open `https://freeholders.org/registry.json`. It should show the registry.
-3. Open `https://www.freeholders.org/standard`. It should land on `https://freeholders.org/standard`.
+3. Open `https://www.freeholders.org/standard/`. It should land on `https://freeholders.org/standard/` in one redirect (pages live at the slash URL, so a slashless path would add a second hop).
 4. Open `https://freeholders.org/no-such-page`. It should show "Nothing is here." with a 404 status.
