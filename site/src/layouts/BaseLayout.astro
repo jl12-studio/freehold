@@ -1,0 +1,53 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../config';
+import '../styles/global.css';
+
+interface Props {
+  /** Page name. Rendered as "<title> · Freehold"; omit on the home page for just "Freehold". */
+  title?: string;
+  description?: string;
+  /** Use the wide page frame (TOC pages, marketplace) instead of the reading measure. */
+  wide?: boolean;
+}
+
+const { title, description = site.description, wide = false } = Astro.props;
+
+const fullTitle = title && title !== site.name ? `${title} · ${site.name}` : site.name;
+const base = Astro.site ?? new URL(site.url);
+const canonical = new URL(Astro.url.pathname, base).href;
+const ogImage = new URL('/og.png', base).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f6f2e9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14120f" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} feed`} href="/feed.xml" />
+    <ClientRouter />
+  </head>
+  <body>
+    <Header wide={wide} />
+    <main id="main" tabindex="-1" class:list={['frame pt-12 sm:pt-16', wide && 'frame-wide']}>
+      <slot />
+    </main>
+    <Footer wide={wide} />
+  </body>
+</html>

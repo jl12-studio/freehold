@@ -1,0 +1,79 @@
+---
+import Mark from './ui/Mark.astro';
+
+interface Props {
+  /** Match the frame to the page: reading measure by default, the wide page frame when true. */
+  wide?: boolean;
+}
+
+const { wide = false } = Astro.props;
+
+const nav = [
+  { href: '/', label: 'Philosophy' },
+  { href: '/standard', label: 'Standard' },
+  { href: '/feed', label: 'Feed' },
+  { href: '/marketplace', label: 'Marketplace' },
+];
+
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+function current(href: string): 'page' | 'true' | undefined {
+  if (path === href) return 'page';
+  if (href !== '/' && path.startsWith(`${href}/`)) return 'true';
+  return undefined;
+}
+---
+
+<header class="site-header border-b border-rule bg-bg sm:sticky sm:top-0 sm:z-20" transition:animate="none">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div
+    class:list={[
+      'frame flex flex-wrap items-center justify-between gap-x-8 gap-y-2.5 pt-5 pb-3 sm:py-4',
+      wide && 'frame-wide',
+    ]}
+  >
+    <a
+      href="/"
+      class="wordmark group inline-flex items-center gap-2.5 font-serif text-[1.375rem] leading-none font-[620] tracking-[-0.012em] text-fg no-underline hover:text-fg"
+      transition:name="wordmark"
+    >
+      <Mark class="size-[1.05em] shrink-0" />
+      <span>Freehold</span>
+    </a>
+    <nav aria-label="Primary" class="-mx-5 -my-1.5 max-w-[100vw] overflow-x-auto px-5 sm:mx-0 sm:overflow-visible sm:px-0">
+      <ul class="flex gap-x-5 py-1.5 font-sans text-ui whitespace-nowrap sm:gap-x-6">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={current(item.href)}
+                class="nav-link inline-block py-1.5 text-muted hover:text-fg aria-[current]:text-fg"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav-link {
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.45em;
+  }
+
+  .nav-link[aria-current] {
+    font-weight: 560;
+    text-decoration-color: var(--color-accent);
+  }
+
+  .nav-link:hover:not([aria-current]) {
+    text-decoration-color: var(--color-rule);
+  }
+</style>

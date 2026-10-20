@@ -1,0 +1,36 @@
+---
+/*
+ * The philosophy page: renders PHILOSOPHY.md from the repo root, never a copy.
+ * Hero and .doc-grid shape per DESIGN.md. The hero slot below is reserved for
+ * the M3 animated comparison and renders nothing yet.
+ */
+import { getEntry } from 'astro:content';
+import DocPage from '../components/docs/DocPage.astro';
+import { formatLogDate, latestLogDate } from '../lib/log-date';
+
+const entry = await getEntry('docs', 'philosophy');
+if (!entry) throw new Error('docs entry "philosophy" not found: is ../PHILOSOPHY.md loaded?');
+
+const updated = latestLogDate(entry.body ?? '');
+---
+
+<DocPage entry={entry}>
+  <section slot="hero" class="hero" aria-label="Freehold">
+    <p class="font-serif text-display font-[560] tracking-[-0.03em] text-fg">Freehold</p>
+    <p class="mt-5 max-w-measure font-serif text-lead text-fg italic sm:mt-6">
+      Freehold software is software you own outright. Subscription software is leasehold.
+    </p>
+    <p class="mt-3 max-w-measure font-sans text-ui text-muted">
+      A philosophy, a standard, and a registry for software that belongs to the people who use it.
+    </p>
+    {
+      updated && (
+        <p class="label mt-6">
+          Working document, updated <time datetime={updated}>{formatLogDate(updated)}</time>
+        </p>
+      )
+    }
+    <!-- M3: the animated comparison island mounts in this slot. Renders nothing until then. -->
+    <div class="hero-slot border-rule lg:mt-16 lg:border-t" data-slot="comparison"></div>
+  </section>
+</DocPage>

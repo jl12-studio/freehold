@@ -1,0 +1,40 @@
+---
+/*
+ * Shared shell for / and /standard: BaseLayout (wide), an optional hero slot,
+ * an optional intro slot, then the doc-grid with the table of contents and the
+ * rendered Markdown in .prose (DESIGN.md, "Hero" and "Table of contents").
+ */
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Toc from './Toc.astro';
+
+interface Props {
+  entry: CollectionEntry<'docs'>;
+  /** Page name for the <title>; omit on the home page. */
+  title?: string;
+  description?: string;
+}
+
+const { entry, title, description } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<BaseLayout title={title} description={description} wide>
+  <slot name="hero" />
+
+  {
+    Astro.slots.has('intro') && (
+      <div class="doc-intro mt-0 mb-10 max-w-measure font-serif text-lead text-fg italic sm:mb-12">
+        <slot name="intro" />
+      </div>
+    )
+  }
+
+  <div class="doc-grid mt-10 sm:mt-12 lg:mt-14 lg:grid lg:grid-cols-[var(--container-toc)_minmax(0,var(--container-measure))] lg:gap-x-16">
+    <Toc headings={headings} />
+
+    <article class="prose">
+      <Content />
+    </article>
+  </div>
+</BaseLayout>

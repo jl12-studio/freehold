@@ -1,0 +1,46 @@
+---
+import { site } from '../config';
+
+interface Props {
+  wide?: boolean;
+}
+
+const { wide = false } = Astro.props;
+
+const usd = (amount: number) => (Number.isInteger(amount) ? `$${amount}` : `$${amount.toFixed(2)}`);
+const { hostingPerMonthUsd, domainFirstYearUsd, host } = site.costs;
+
+const links = [
+  { href: site.repoUrl, label: 'Source' },
+  { href: '/feed.xml', label: 'RSS' },
+  { href: '/registry.json', label: 'Registry JSON' },
+  { href: `${site.repoUrl}/blob/main/LICENSE.md`, label: 'Writing CC BY-SA 4.0, code MIT' },
+];
+---
+
+<footer class="mt-24 border-t border-rule sm:mt-32" transition:animate="none">
+  <div class:list={['frame grid gap-10 pt-12 pb-16 sm:pt-14 sm:pb-20', wide && 'frame-wide md:grid-cols-[minmax(0,1fr)_auto] md:gap-16']}>
+    <div class="max-w-measure">
+      <p class="font-serif text-lead text-fg">Freehold software is software you own outright.</p>
+      <p class="mt-3 font-serif text-fg/90 italic">
+        Freehold is a status, not a brand. The standard is public; this is one registry.
+      </p>
+      <p class="label mt-6">
+        Built at cost: {usd(hostingPerMonthUsd)} a month on {host}, {usd(domainFirstYearUsd)} a year for the domain.
+      </p>
+    </div>
+    <nav aria-label="Source and licenses" class:list={[wide && 'md:pt-1.5']}>
+      <ul class:list={['flex flex-wrap gap-x-6 gap-y-2 font-sans text-ui', wide && 'md:flex-col md:items-end']}>
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href} class="text-muted underline decoration-muted/40 underline-offset-[0.3em] hover:text-accent hover:decoration-accent">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</footer>

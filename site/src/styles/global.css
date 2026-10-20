@@ -1,0 +1,501 @@
+@import "tailwindcss";
+
+/* Self-hosted type. Vite bundles these into /_astro/; nothing leaves the origin. */
+@import "@fontsource-variable/literata/opsz.css";
+@import "@fontsource-variable/literata/opsz-italic.css";
+@import "@fontsource-variable/public-sans/wght.css";
+
+/*
+ * Design tokens. site/DESIGN.md is the binding reference for every value here.
+ * The default Tailwind palette is removed on purpose: use only these semantic colors.
+ */
+@theme {
+  --color-*: initial;
+
+  /* Light scheme (default). Dark overrides live in the media block below. */
+  --color-bg: #f6f2e9;
+  --color-surface: #ede7da;
+  --color-fg: #1f1b16;
+  --color-muted: #5f574b;
+  --color-accent: #2d6141;
+  --color-rule: #d8cfbe;
+  --color-focus: #2d6141;
+
+  /* Status colors, reserved for marketplace badges and checklist statuses. */
+  --color-planned: #5f574b;
+  --color-building: #83500f;
+  --color-certified: #2d6141;
+  --color-pass: #2d6141;
+  --color-not-yet: #83500f;
+  --color-na: #5f574b;
+
+  --font-serif: "Literata Variable", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Public Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.5;
+  --text-ui: 0.9375rem;
+  --text-ui--line-height: 1.4;
+  --text-body: clamp(1.0625rem, 0.98rem + 0.35vw, 1.1875rem);
+  --text-body--line-height: 1.65;
+  --text-lead: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-lead--line-height: 1.4;
+  --text-h4: 1rem;
+  --text-h4--line-height: 1.4;
+  --text-h3: clamp(1.25rem, 1.15rem + 0.4vw, 1.4375rem);
+  --text-h3--line-height: 1.3;
+  --text-h2: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  --text-h2--line-height: 1.2;
+  --text-h1: clamp(2rem, 1.5rem + 2vw, 2.75rem);
+  --text-h1--line-height: 1.1;
+  --text-display: clamp(3.25rem, 2rem + 5.5vw, 6rem);
+  --text-display--line-height: 0.95;
+
+  --container-measure: 39rem;
+  --container-toc: 13rem;
+  --container-page: 56rem;
+
+  --radius-sm: 3px;
+  --radius-md: 5px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #14120f;
+    --color-surface: #211e19;
+    --color-fg: #ece5d7;
+    --color-muted: #a79d8c;
+    --color-accent: #93c4a1;
+    --color-rule: #35302a;
+    --color-focus: #93c4a1;
+
+    --color-planned: #a79d8c;
+    --color-building: #ddb06a;
+    --color-certified: #93c4a1;
+    --color-pass: #93c4a1;
+    --color-not-yet: #ddb06a;
+    --color-na: #a79d8c;
+  }
+}
+
+/* Motion tokens (plain variables, no utilities). Rules in DESIGN.md, "Motion". */
+:root {
+  --motion-fast: 140ms;
+  --motion-base: 220ms;
+  --motion-slow: 480ms;
+  --motion-distance: 0.75rem;
+  --header-offset: 1.5rem;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --header-offset: 5.5rem;
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-serif);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+  main:focus {
+    outline: none;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6) {
+    text-wrap: balance;
+  }
+
+  :where(p, li, blockquote, figcaption) {
+    text-wrap: pretty;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6)[id],
+  :target {
+    scroll-margin-top: var(--header-offset);
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent) 28%, transparent);
+  }
+
+  a {
+    color: inherit;
+    text-decoration-color: color-mix(in oklab, var(--color-accent) 55%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition:
+      color var(--motion-fast) var(--ease-out),
+      text-decoration-color var(--motion-fast) var(--ease-out);
+  }
+
+  a:hover {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+/*
+ * Reduced motion: nothing animates on load, on scroll, or on navigation.
+ * Astro's ClientRouter also drops its view-transition animations; the rules
+ * below are the global backstop for anything a later issue adds.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+@layer components {
+  /* Skip link: hidden until focused. */
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -10rem;
+    z-index: 50;
+    padding: 0.5rem 0.875rem;
+    background-color: var(--color-fg);
+    color: var(--color-bg);
+    font-family: var(--font-sans);
+    font-size: var(--text-ui);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+  }
+
+  .skip-link:focus {
+    top: 0.75rem;
+  }
+
+  .skip-link:hover {
+    color: var(--color-bg);
+  }
+
+  /*
+   * Page frames. .frame is the reading measure plus gutters; add .frame-wide for
+   * pages that set wide (TOC pages, marketplace grid). Header, main, and footer all
+   * use the same frame so their edges line up.
+   */
+  .frame {
+    width: 100%;
+    margin-inline: auto;
+    max-width: calc(var(--container-measure) + 2.5rem);
+    padding-inline: 1.25rem;
+  }
+
+  .frame-wide {
+    max-width: calc(var(--container-page) + 2.5rem);
+  }
+
+  @media (min-width: 40rem) {
+    .frame {
+      max-width: calc(var(--container-measure) + 4rem);
+      padding-inline: 2rem;
+    }
+
+    .frame-wide {
+      max-width: calc(var(--container-page) + 4rem);
+    }
+  }
+
+  /* Small sans label: dates, eyebrows, metadata. */
+  .label {
+    font-family: var(--font-sans);
+    font-size: var(--text-caption);
+    line-height: var(--text-caption--line-height);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /*
+   * .prose: rendered Markdown (PHILOSOPHY.md, FRAMEWORK.md, feed posts).
+   * Width comes from the layout (max-w-measure); .prose only sets rhythm.
+   */
+  .prose {
+    font-family: var(--font-serif);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    color: var(--color-fg);
+    hanging-punctuation: first;
+  }
+
+  .prose > * {
+    margin-block: 0;
+  }
+
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+
+  .prose :is(h1, h2, h3, h4) {
+    color: var(--color-fg);
+  }
+
+  .prose h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .prose h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .prose h3 {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: 600;
+  }
+
+  .prose h4 {
+    font-family: var(--font-sans);
+    font-size: var(--text-h4);
+    line-height: var(--text-h4--line-height);
+    font-weight: 650;
+    letter-spacing: 0.005em;
+  }
+
+  /* Heading space is in the heading's own em, so it scales with the fluid sizes. */
+  .prose > * + h2 {
+    margin-top: 1.9em;
+  }
+
+  .prose > * + h3 {
+    margin-top: 1.75em;
+  }
+
+  .prose > * + h4 {
+    margin-top: 1.75em;
+  }
+
+  .prose h1 + * {
+    margin-top: 1em;
+  }
+
+  .prose > :first-child {
+    margin-top: 0;
+  }
+
+  .prose :is(h2, h3, h4) + * {
+    margin-top: 0.75em;
+  }
+
+  .prose strong {
+    font-weight: 650;
+  }
+
+  .prose em {
+    font-style: italic;
+  }
+
+  .prose a {
+    text-decoration-line: underline;
+  }
+
+  .prose del,
+  .prose s {
+    color: var(--color-muted);
+    text-decoration-thickness: 1px;
+  }
+
+  .prose :is(ul, ol) {
+    padding-left: 1.4em;
+  }
+
+  .prose ul {
+    list-style-type: disc;
+  }
+
+  .prose ol {
+    list-style-type: decimal;
+  }
+
+  .prose ul ul {
+    list-style-type: circle;
+  }
+
+  .prose li {
+    padding-left: 0.25em;
+  }
+
+  .prose li + li {
+    margin-top: 0.5em;
+  }
+
+  .prose li > :is(ul, ol) {
+    margin-top: 0.5em;
+  }
+
+  .prose li > p + p {
+    margin-top: 0.75em;
+  }
+
+  .prose li::marker {
+    color: var(--color-muted);
+  }
+
+  .prose ol > li::marker {
+    font-family: var(--font-sans);
+    font-size: 0.875em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose blockquote {
+    border-left: 2px solid var(--color-accent);
+    padding-left: 1.25em;
+    font-style: italic;
+    color: var(--color-muted);
+  }
+
+  .prose blockquote > * + * {
+    margin-top: 0.75em;
+  }
+
+  .prose blockquote :is(strong, a) {
+    color: var(--color-fg);
+  }
+
+  .prose hr {
+    border: 0;
+    height: 1px;
+    background-color: var(--color-rule);
+    margin-block: 3em;
+  }
+
+  .prose code {
+    font-family: var(--font-mono);
+    font-size: 0.84em;
+    background-color: var(--color-surface);
+    padding: 0.12em 0.35em;
+    border-radius: var(--radius-sm);
+    overflow-wrap: anywhere;
+  }
+
+  .prose pre {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    background-color: var(--color-surface) !important;
+    color: var(--color-fg) !important;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+  }
+
+  /* Shiki colors are inline; keep code calm and in-palette in both schemes. */
+  .prose pre span {
+    color: inherit !important;
+    background-color: transparent !important;
+  }
+
+  .prose pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    overflow-wrap: normal;
+  }
+
+  .prose table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-family: var(--font-sans);
+    font-size: var(--text-ui);
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose th {
+    text-align: left;
+    font-weight: 600;
+    vertical-align: bottom;
+    border-bottom: 1px solid var(--color-muted);
+  }
+
+  .prose td {
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .prose :is(th, td) {
+    padding: 0.55em 1.25em 0.55em 0;
+  }
+
+  .prose :is(th, td):last-child {
+    padding-right: 0;
+  }
+
+  .prose td code {
+    font-size: 0.9em;
+  }
+
+  .prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+  }
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .plot { fill: #2d6141; }
+    .letter { fill: #f6f2e9; }
+    @media (prefers-color-scheme: dark) {
+      .plot { fill: #93c4a1; }
+      .letter { fill: #14120f; }
+    }
+  </style>
+  <rect class="plot" width="32" height="32" rx="6"/>
+  <path class="letter" d="M8 7H24V12.5H21.5V10H14.5V14.75H20V17.75H14.5V22H17.5V25H8V22H10.5V10H8Z"/>
+</svg>

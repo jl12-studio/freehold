@@ -1,0 +1,21 @@
+---
+/*
+ * The standard page: renders FRAMEWORK.md from the repo root, never a copy.
+ */
+import { getEntry } from 'astro:content';
+import DocPage from '../components/docs/DocPage.astro';
+
+const entry = await getEntry('docs', 'framework');
+if (!entry) throw new Error('docs entry "framework" not found: is ../FRAMEWORK.md loaded?');
+---
+
+<DocPage
+  entry={entry}
+  title="The Standard"
+  description="The public definition of Freehold software, and how we build it."
+>
+  <p slot="intro">
+    Part 0 and Part 1 below are the public definition of Freehold. Anyone whose software meets them may call it Freehold; no
+    permission needed. Parts 2 to 4 are how we build.
+  </p>
+</DocPage>

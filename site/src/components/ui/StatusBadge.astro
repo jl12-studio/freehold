@@ -1,0 +1,30 @@
+---
+/**
+ * Marketplace entry status. Text plus a glyph, never color alone.
+ * DESIGN.md, "Status colors", is the binding spec.
+ */
+interface Props {
+  status: 'planned' | 'building' | 'certified';
+  class?: string;
+}
+
+const { status, class: className } = Astro.props;
+
+const meta = {
+  planned: { label: 'Planned', glyph: '○', tone: 'text-planned' },
+  building: { label: 'Building', glyph: '◐', tone: 'text-building' },
+  certified: { label: 'Certified', glyph: '●', tone: 'text-certified' },
+}[status];
+---
+
+<span
+  class:list={[
+    'status-pill inline-flex items-center gap-1.5 rounded-full border border-current/35 bg-current/10 px-2.5 py-0.5 font-sans text-caption font-[560] leading-snug whitespace-nowrap',
+    meta.tone,
+    className,
+  ]}
+  data-status={status}
+>
+  <span aria-hidden="true" class="text-[0.8em]">{meta.glyph}</span>
+  {meta.label}
+</span>

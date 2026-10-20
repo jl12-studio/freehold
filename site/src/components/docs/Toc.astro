@@ -1,0 +1,46 @@
+---
+/*
+ * Table of contents for the document pages (DESIGN.md, "Table of contents").
+ * Renders two siblings of .doc-grid: the mobile <details> (below lg, no JS) and
+ * the sticky desktop <nav> (lg and up). Only h2 and h3 appear; links are #<slug>.
+ */
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const items = Astro.props.headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+<details class="toc-mobile mb-10 border-y border-rule font-sans text-ui lg:hidden">
+  <summary class="cursor-pointer py-3 font-[560] text-fg marker:text-muted">Contents</summary>
+  <ol class="space-y-2 pb-4">
+    {
+      items.map((item) => (
+        <li class:list={[item.depth === 3 && 'pl-4']}>
+          <a href={`#${item.slug}`} class="text-muted no-underline hover:text-fg">
+            {item.text}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</details>
+
+<nav aria-label="Contents" class="toc hidden lg:block">
+  <div class="sticky top-[var(--header-offset)] font-sans text-caption">
+    <p class="label mb-3 font-[600] tracking-[0.02em] text-fg">Contents</p>
+    <ol class="space-y-2 border-l border-rule">
+      {
+        items.map((item) => (
+          <li class:list={[item.depth === 3 ? 'pl-7' : 'pl-4']}>
+            <a href={`#${item.slug}`} class="block text-muted no-underline hover:text-fg">
+              {item.text}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</nav>
