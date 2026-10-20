@@ -1,0 +1,43 @@
+# Freehold: Read This First
+
+Orientation for any agent or human picking this up with zero prior context, possibly months later, possibly a different model. This file tells you everything you need to participate.
+
+## What this is
+
+**Freehold** is a philosophy and a movement (eventually a book; **never call it a manifesto**) about using AI + the MCP protocol + open repos to empower ordinary people, so that AI doesn't become the third technology captured by the few (after the Internet and social media). "Freehold" means owning your software outright, the way freehold means owning land outright instead of renting from a landlord. The people are **freeholders**; the home is **freeholders.org**. This repo is the movement itself: the philosophy, the standard, and the freeholders.org website (in `site/`, once it exists). **Apps are not in here.** Freehold Ledger and every other Freehold app live in their own repos; this repo only points to them from the marketplace page. Other people's Freehold software can live anywhere; the standard never requires being here.
+
+## The files
+
+| File | What it is |
+|------|-----------|
+| [PHILOSOPHY.md](PHILOSOPHY.md) | **The living document.** The distilled, evolving philosophy. Read this to understand the ideas. |
+| [FRAMEWORK.md](FRAMEWORK.md) | **The standard and the build framework.** Part 0 defines what makes software Freehold; Part 1 is the 10-point standard; Part 2 the build order; Part 3 the first app. Read this before building anything. |
+| [raw/](raw/) | **Verbatim captures.** Marcus's spoken/dictated/typed rambles, preserved word-for-word, dated. Never edit these. |
+| [drafts/](drafts/) | **Outward-facing drafts** (posts, replies, future site copy). |
+| [tmp/](tmp/) | **Session handoff artifacts** for the `linear-project-workflow` skill. |
+
+## How to work on this (the workflow)
+
+1. **When Marcus rambles** (stream-of-consciousness idea dumps, often with dictation or typing errors): save the ramble **verbatim**, typos and all, as a new dated file in `raw/` (pattern: `YYYY-MM-DD-short-slug-verbatim.md`, with a small header linking back to PHILOSOPHY.md).
+2. **Then fold the ideas into [PHILOSOPHY.md](PHILOSOPHY.md)**: distill, place them in the right section (or create one), promote rough thoughts to the Ideas Inbox, and add a dated entry to the Log section at the bottom.
+3. **Engage.** Marcus explicitly wants a thinking partner, not a stenographer. Offer connections, name tensions between captures, answer his open questions when a new ramble resolves one, and challenge ideas honestly. Several of the doc's best refinements ("you can't capture people who can leave," curation-as-certification, the name itself) came from that back-and-forth.
+4. **Keep the Log current.** Every capture gets a Log entry in PHILOSOPHY.md. That log is the project's memory.
+
+## Voice and style rules
+
+- **No em dashes. Ever.** Use periods, commas, colons, or parentheses. Marcus feels strongly about this. (Raw captures are exempt because they're verbatim.)
+- It's a **philosophy**, **framework**, or **movement**, never a manifesto (stigma).
+- Hopeful and empowering in tone, not just tech-criticism. The spine is: **Threat → Opportunity → Method.**
+- Marcus's touchstones: Teddy Roosevelt (big-G Government = the people), Lincoln (the leader is not the movement), teach-a-man-to-fish, the 250,000-people-times-$5 math.
+- Core commitments (the non-negotiables; full list in PHILOSOPHY.md): everything at cost, teach-don't-do-for, no walled platform, curated but free (curation = certification, not taste), outlives any founder, the human owns the product, no lock-in by protocol.
+- Naming: apps are **Freehold + plain noun** (Freehold Ledger). Freehold is a status anyone can earn, never a brand anyone owns.
+
+## Current state (update this section whenever it changes)
+
+- **Repo:** `~/Programming/Personal/freehold`, created 2026-10-20 by moving `jippylong12xyz/philosophy/` out into its own project. Layout: root = philosophy/standard, `site/` = freeholders.org (not started). Freehold Ledger is a separate repo (`~/Programming/Personal/freehold-ledger`, not created yet; JIP-470 creates it).
+- **Website:** how freeholders.org gets built is **not decided yet**. That's the first decision for the next session. Shape is settled (philosophy page + live feed + marketplace); stack and hosting are open. Domain is on Cloudflare.
+- **Follow-up, not started:** once freeholders.org is up, add a Freehold section to jippylong12.xyz (repo at `~/WebstormProjects/jippylong12xyz`) linking out to it.
+- **Name and domain:** Freehold / freeholders / freeholders.org, decided 2026-10-20. **freeholders.org purchased on Cloudflare 2026-10-20** ($8.50 first year). GitHub `freehold` and `freeholders` were unclaimed on 2026-10-20; nothing claimed yet.
+- **Roadmap position:** Step 1 of 3 (1. Ramble → 2. freeholders.org → 3. Book). The site's shape is set (philosophy page + live feed, plus the marketplace) but nothing is built.
+- **First application:** **Freehold Ledger**, the simple accounting app (the "QuickBooks scene" in PHILOSOPHY.md). Planned in Linear, Jippylong12 team: https://linear.app/jippylong12/project/freehold-ledger-3aeec41a94a4. Stage 1 (local desktop, Mac-first) only, per Desktop → Cloud → Mobile. Active milestones: M1 Foundation & Data Model → M2 Local Ledger Core → M3 MCP Surface (ship point) → M4 Tax-Ready Output → M6 Import exploratory (JIP-469 to 476, 480). Cloud descoped: JIP-477/478/479 canceled, kept as reference. Work it with the `linear-project-workflow` skill; first-session prompt at `tmp/freehold-ledger-m1-first-session.md`. JIP-470 still needs: license (Marcus approves), platform approach, and creating the `freehold-ledger` repo.
+- **Last activity:** 2026-10-20, named the movement, moved the repo, renamed the Linear project. See the Log in PHILOSOPHY.md for full history.
