@@ -19,6 +19,18 @@ USAGE
   exit 1
 fi
 
+# rsync --delete removes everything at the destination that is not in dist/, so refuse a
+# destination that is a home directory, the filesystem root, or the current or parent
+# directory (for example "user@host:" with no path, "user@host:/", "~/", or ".").
+dest_path="${DEPLOY_TARGET#*:}"
+dest_path="${dest_path%"${dest_path##*[!/]}"}"
+case "$dest_path" in
+  '' | . | .. | '~' | ./ | ../)
+    echo "deploy-static.sh: refusing DEPLOY_TARGET=$DEPLOY_TARGET: rsync --delete would wipe a home, root, or working directory. Name the site's own directory, for example user@host:/var/www/freeholders.org/" >&2
+    exit 1
+    ;;
+esac
+
 cd "$(dirname "$0")/.."
 
 pnpm build

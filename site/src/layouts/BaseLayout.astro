@@ -11,9 +11,11 @@ interface Props {
   description?: string;
   /** Use the wide page frame (TOC pages, marketplace) instead of the reading measure. */
   wide?: boolean;
+  /** False for the 404 page: it is served at every missing URL, so it names no canonical URL and asks not to be indexed. */
+  indexable?: boolean;
 }
 
-const { title, description = site.description, wide = false } = Astro.props;
+const { title, description = site.description, wide = false, indexable = true } = Astro.props;
 
 const fullTitle = title && title !== site.name ? `${title} · ${site.name}` : site.name;
 const base = Astro.site ?? new URL(site.url);
@@ -28,14 +30,14 @@ const ogImage = new URL('/og.png', base).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {indexable ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#f6f2e9" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#14120f" media="(prefers-color-scheme: dark)" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
+    {indexable && <meta property="og:url" content={canonical} />}
     <meta property="og:site_name" content={site.name} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />

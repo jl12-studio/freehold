@@ -77,6 +77,14 @@ describe('the 404 page', () => {
     expect(main.toLowerCase()).not.toContain(FORBIDDEN_WORD);
     expect(main).not.toContain(EM_DASH);
   });
+
+  it('names no canonical URL and is not indexed, since it is served at every missing path', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(NotFound, { request: new Request('https://freeholders.org/no-such-page') });
+    expect(html).not.toContain('rel="canonical"');
+    expect(html).not.toContain('og:url');
+    expect(html).toMatch(/<meta name="robots" content="noindex"\s*\/?>/);
+  });
 });
 
 describe('the social image', () => {
@@ -128,6 +136,22 @@ describe('scripts/deploy-static.sh', () => {
     const r = run({ DEPLOY_TARGET: '' });
     expect(r.status).toBe(1);
     expect(r.calls).toEqual([]);
+  });
+
+  it.each(['user@host:', 'user@host:/', 'user@host://', 'user@host:~', 'user@host:~/', '.', './', '..', '/'])(
+    'refuses DEPLOY_TARGET=%s (a home, root, or working directory --delete would wipe) without building',
+    (target) => {
+      const r = run({ DEPLOY_TARGET: target });
+      expect(r.status).toBe(1);
+      expect(r.stderr).toMatch(/refusing/i);
+      expect(r.calls).toEqual([]);
+    },
+  );
+
+  it('accepts a remote target with a relative site directory', () => {
+    const r = run({ DEPLOY_TARGET: 'deploy@example.net:freeholders.org/' });
+    expect(r.status).toBe(0);
+    expect(r.calls).toEqual(['pnpm build', 'rsync -az --delete dist/ deploy@example.net:freeholders.org/']);
   });
 
   it('builds, then rsyncs dist/ to the target with --delete', () => {
