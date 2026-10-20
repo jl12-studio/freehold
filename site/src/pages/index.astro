@@ -2,10 +2,11 @@
 /*
  * The philosophy page: renders PHILOSOPHY.md from the repo root, never a copy.
  * Hero and .doc-grid shape per DESIGN.md. The hero slot below is reserved for
- * the M3 animated comparison and renders nothing yet.
+ * the animated comparison island (HeroCompare.vue).
  */
 import { getEntry } from 'astro:content';
 import DocPage from '../components/docs/DocPage.astro';
+import HeroCompare from '../components/motion/HeroCompare.vue';
 import { formatLogDate, latestLogDate } from '../lib/log-date';
 
 const entry = await getEntry('docs', 'philosophy');
@@ -30,7 +31,8 @@ const updated = latestLogDate(entry.body ?? '');
         </p>
       )
     }
-    <!-- M3: the animated comparison island mounts in this slot. Renders nothing until then. -->
-    <div class="hero-slot border-rule lg:mt-16 lg:border-t" data-slot="comparison"></div>
+    <div class="hero-slot border-rule lg:mt-16 lg:border-t" data-slot="comparison">
+      <HeroCompare client:visible />
+    </div>
   </section>
 </DocPage>

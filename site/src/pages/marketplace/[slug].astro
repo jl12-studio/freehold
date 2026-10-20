@@ -20,7 +20,7 @@ const link = 'text-fg underline decoration-accent/55 underline-offset-[0.2em] ho
 
 <BaseLayout title={data.name} description={data.oneLine}>
   <header>
-    <h1 class="font-serif text-h1 font-semibold tracking-[-0.015em]">{data.name}</h1>
+    <h1 transition:name={`app-title-${entry.id}`} class="w-fit max-w-full font-serif text-h1 font-semibold tracking-[-0.015em]">{data.name}</h1>
     <p class="mt-5 font-serif text-lead text-fg italic">{data.oneLine}</p>
     <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-sans text-caption text-muted">
       <StatusBadge status={data.status} />
@@ -37,9 +37,9 @@ const link = 'text-fg underline decoration-accent/55 underline-offset-[0.2em] ho
       {data.homepage && <a href={data.homepage} class={link}>Homepage</a>}
     </p>
     <p class="label mt-4">
-      Maintainer:
-      {data.maintainer.url ? <a href={data.maintainer.url} class={link}>{data.maintainer.name}</a> : data.maintainer.name}
-      <span aria-hidden="true">·</span>
+      Maintainer:{' '}
+      {data.maintainer.url ? <a href={data.maintainer.url} class={link}>{data.maintainer.name}</a> : data.maintainer.name}{' '}
+      <span aria-hidden="true">·</span>{' '}
       Updated <time datetime={updated}>{formatLogDate(updated)}</time>
     </p>
   </header>

@@ -10,6 +10,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
+    "og": "node scripts/make-og.mjs",
     "deploy": "astro build && wrangler pages deploy dist --project-name freeholders-org",
     "astro": "astro"
   },
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.11",
     "@tailwindcss/vite": "^4.3.3",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vitest": "^5.0.5",

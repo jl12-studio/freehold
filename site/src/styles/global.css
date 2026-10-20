@@ -4,6 +4,7 @@
 @import "@fontsource-variable/literata/opsz.css";
 @import "@fontsource-variable/literata/opsz-italic.css";
 @import "@fontsource-variable/public-sans/wght.css";
+@import "./motion.css";
 
 /*
  * Design tokens. site/DESIGN.md is the binding reference for every value here.

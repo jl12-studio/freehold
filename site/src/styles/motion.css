@@ -1,0 +1,32 @@
+/*
+ * Motion utilities. Rules: site/DESIGN.md, "Motion". Values come from the tokens
+ * in global.css (--motion-distance, --ease-out); nothing here invents a new one.
+ *
+ * .reveal: an element fades in and lifts as it scrolls into view, driven by the
+ * scroll position itself (CSS scroll-driven animation), so it needs no script.
+ * Content is visible by default: the hidden start state exists only inside the
+ * @supports block (a browser without view timelines shows the element plainly)
+ * and only when the reader has not asked for reduced motion.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in var(--ease-out) both;
+      animation-timeline: view();
+      /* Begins once about 15% of the element has entered, done by 55%. */
+      animation-range: entry 15% entry 55%;
+    }
+
+    @keyframes reveal-in {
+      from {
+        opacity: 0;
+        transform: translateY(var(--motion-distance));
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  }
+}

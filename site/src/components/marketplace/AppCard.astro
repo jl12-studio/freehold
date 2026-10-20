@@ -16,13 +16,13 @@ const { pass, na } = passCount(entry);
 ---
 
 <li
-  class="relative rounded-[var(--radius-md)] border border-rule p-5 transition-colors duration-[var(--motion-fast)] ease-out hover:border-muted sm:p-6"
+  class="reveal relative rounded-[var(--radius-md)] border border-rule p-5 transition-colors duration-[var(--motion-fast)] ease-out hover:border-muted sm:p-6"
 >
   <h2 class="font-serif text-h3">
     <a
       href={`/marketplace/${entry.id}/`}
       class="no-underline after:absolute after:inset-0 after:content-['']"
-    >{data.name}</a>
+    ><span class="inline-block" transition:name={`app-title-${entry.id}`}>{data.name}</span></a>
   </h2>
   <p class="mt-2 text-muted">{data.oneLine}</p>
   <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-sans text-caption text-muted">
