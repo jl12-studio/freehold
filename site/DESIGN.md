@@ -225,6 +225,6 @@ Do not:
 
 - Add colors, fonts, shadows, gradients, blur, or rounded cards.
 - Box reading text, zebra-stripe tables, or put icons next to headings.
-- Load anything from another origin (fonts, scripts, images, analytics).
+- Load anything from another origin (fonts, scripts, images). The one standing exception is the Google Analytics 4 tag in `BaseLayout.astro`, production builds only, with its hosts named in `public/_headers`.
 - Add a theme toggle, a hamburger menu, or JavaScript for layout.
 - Type an em dash in anything you author, or the word for a political pamphlet that the README forbids.

@@ -22,17 +22,17 @@ describe('Cloudflare Pages config', () => {
     expect(toml).toContain('pages_build_output_dir = "dist"');
   });
 
-  it('serves a self-only CSP and the companion security headers on every path', () => {
+  it('serves a CSP that allows only this origin plus Google Analytics, and the companion security headers, on every path', () => {
     const headers = read('public/_headers');
     expect(headers.split('\n')[0]).toBe('/*');
     const csp = headers.match(/^\s+Content-Security-Policy: (.+)$/m)?.[1] ?? '';
     expect(csp.split('; ')).toEqual([
       "default-src 'self'",
-      "script-src 'self'",
+      "script-src 'self' https://*.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data:",
+      "img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com",
       "font-src 'self'",
-      "connect-src 'self'",
+      "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com",
       "object-src 'none'",
       "base-uri 'self'",
       "frame-ancestors 'none'",
@@ -216,6 +216,24 @@ describe('DEPLOY.md', () => {
       .filter((path) => !/\.[a-z0-9]+$/i.test(path) && path !== '/no-such-page');
     expect(pageUrls.length).toBeGreaterThan(0);
     for (const path of pageUrls) expect(path, path).toMatch(/\/$/);
+  });
+});
+
+describe('analytics', () => {
+  it('names the GA4 measurement id in config, and the CSP admits exactly the Google hosts it needs', () => {
+    expect(site.analytics.ga4).toMatch(/^G-[A-Z0-9]{6,}$/);
+    const csp = read('public/_headers').match(/^\s+Content-Security-Policy: (.+)$/m)?.[1] ?? '';
+    const externalHosts = [...csp.matchAll(/https:\/\/[^\s;]+/g)].map((m) => m[0]);
+    expect(new Set(externalHosts)).toEqual(
+      new Set(['https://*.googletagmanager.com', 'https://*.google-analytics.com', 'https://*.analytics.google.com']),
+    );
+  });
+
+  it('loads the tag only in a production build', () => {
+    const layout = read('src/layouts/BaseLayout.astro');
+    expect(layout).toContain("import.meta.env.PROD ? site.analytics.ga4 : ''");
+    expect(layout).toContain("gtag('config', ga4, { send_page_view: false })");
+    expect(layout).toContain("document.addEventListener('astro:page-load'");
   });
 });
 

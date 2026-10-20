@@ -6,7 +6,7 @@ The site is plain static files. Cloudflare Pages is the default host because the
 
 The output of `pnpm build` in `dist/`. Plain HTML, CSS, a little JavaScript, fonts, and images. Nothing to run on the server: no database, no runtime, no functions.
 
-One file in `dist/`, `_headers`, is a Cloudflare Pages convention and only takes effect there: the Content-Security-Policy (everything restricted to this origin, plus a hash for each inline script Astro emits) and the other security headers. The build writes the same headers a second time as `headers.nginx.conf`, for the escape hatch below. The www-to-apex redirect is not a file at all; it is a Redirect Rule in the Cloudflare dashboard (see below), because Pages cannot redirect across hosts from a file.
+One file in `dist/`, `_headers`, is a Cloudflare Pages convention and only takes effect there: the Content-Security-Policy (this origin plus the Google Analytics hosts, with a hash for each inline script the build emits) and the other security headers. The build writes the same headers a second time as `headers.nginx.conf`, for the escape hatch below. The www-to-apex redirect is not a file at all; it is a Redirect Rule in the Cloudflare dashboard (see below), because Pages cannot redirect across hosts from a file.
 
 Everything else (`robots.txt`, `sitemap-index.xml`, `404.html`, `og.png`, the feed and the registry) works on any host.
 

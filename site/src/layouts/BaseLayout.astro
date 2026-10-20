@@ -21,6 +21,8 @@ const fullTitle = title && title !== site.name ? `${title} · ${site.name}` : si
 const base = Astro.site ?? new URL(site.url);
 const canonical = new URL(Astro.url.pathname, base).href;
 const ogImage = new URL('/og.png', base).href;
+// Analytics only in a production build, so dev and preview traffic never count.
+const ga4 = import.meta.env.PROD ? site.analytics.ga4 : '';
 ---
 
 <!doctype html>
@@ -44,6 +46,29 @@ const ogImage = new URL('/og.png', base).href;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title={`${site.name} feed`} href="/feed.xml" />
     <ClientRouter />
+    {
+      ga4 && (
+        <>
+          <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`} />
+          <script is:inline define:vars={{ ga4 }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', ga4, { send_page_view: false });
+            // One page_view per page, including client-side navigations through the view transition router.
+            document.addEventListener('astro:page-load', () => {
+              gtag('event', 'page_view', {
+                page_path: location.pathname,
+                page_title: document.title,
+                page_location: location.href,
+              });
+            });
+          </script>
+        </>
+      )
+    }
   </head>
   <body>
     <Header wide={wide} />

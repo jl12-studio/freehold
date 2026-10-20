@@ -26,4 +26,4 @@ pnpm run deploy # build and upload to Cloudflare Pages (needs wrangler login onc
 
 ## Rules
 
-No em dashes in anything the site itself authors (`pnpm test` enforces it). No analytics, no external requests, no cookies. Writing is CC BY-SA 4.0, code is MIT (see `../LICENSE.md`).
+No em dashes in anything the site itself authors (`pnpm test` enforces it). Fonts and scripts are self-hosted; the one third party is Google Analytics 4 (measurement id in `src/config.ts`, loaded only in production builds, so dev and preview traffic never count; it sets Google's cookies). The Content-Security-Policy in `public/_headers` admits exactly the Google hosts it needs and nothing else. Writing is CC BY-SA 4.0, code is MIT (see `../LICENSE.md`).
