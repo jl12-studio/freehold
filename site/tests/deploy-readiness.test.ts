@@ -191,7 +191,7 @@ describe('DEPLOY.md', () => {
     for (const needle of [
       'jl12-studio/freehold',
       'pnpm dlx wrangler login',
-      'pnpm deploy',
+      'pnpm run deploy',
       'DEPLOY_TARGET=user@host:/path ./scripts/deploy-static.sh',
       'include /var/www/freeholders.org/headers.nginx.conf;',
       'curl -sI https://freeholders.org | grep -i content-security-policy',

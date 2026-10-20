@@ -12,7 +12,7 @@ Everything else (`robots.txt`, `sitemap-index.xml`, `404.html`, `og.png`, the fe
 
 ## Steady state: Cloudflare Pages from GitHub
 
-Current state (2026-10-20): the repository is public at `jl12-studio/freehold`, and the live Pages project `freeholders-org` was created from the command line, so it deploys with `pnpm deploy` (see the next section). Cloudflare cannot connect an existing command-line project to Git. To switch to deploy-on-push, create a second project from Git with the steps below (for example `freeholders-org-git`), move the custom domains to it, then delete `freeholders-org`.
+Current state (2026-10-20): the repository is public at `jl12-studio/freehold`, and the live Pages project `freeholders-org` was created from the command line, so it deploys with `pnpm run deploy` (see the next section). Cloudflare cannot connect an existing command-line project to Git. To switch to deploy-on-push, create a second project from Git with the steps below (for example `freeholders-org-git`), move the custom domains to it, then delete `freeholders-org`.
 
 Deploys happen on every push to `main`. Do this once:
 
@@ -47,10 +47,10 @@ Use this until the repository is on GitHub, or any time you want to push without
 ```sh
 cd site
 pnpm dlx wrangler login   # once; opens a browser for Cloudflare
-pnpm deploy               # builds, then uploads dist/ to the Pages project
+pnpm run deploy           # builds, then uploads dist/ to the Pages project
 ```
 
-The first run creates the Pages project `freeholders-org` if it does not exist. Confirm when prompted. After that, `pnpm deploy` is the whole command.
+The first run creates the Pages project `freeholders-org` if it does not exist. Confirm when prompted. After that, `pnpm run deploy` is the whole command.
 
 To preview the headers locally before uploading anything:
 

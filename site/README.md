@@ -11,7 +11,7 @@ pnpm build      # static output in dist/
 pnpm preview    # serve dist/
 pnpm check      # astro check
 pnpm test       # vitest
-pnpm deploy     # build and upload to Cloudflare Pages (needs wrangler login once)
+pnpm run deploy # build and upload to Cloudflare Pages (needs wrangler login once)
 ```
 
 ## Where things are
