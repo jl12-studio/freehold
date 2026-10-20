@@ -2,9 +2,9 @@
 # Deploy the built site to any plain web host over SSH. This is the no-lock-in escape hatch.
 #
 # The build output in dist/ is plain static files, so any host that serves files can serve it.
-# Two of those files, _headers and _redirects, are Cloudflare Pages conventions and do nothing
-# on other hosts. DEPLOY.md ("Escape hatch: any plain host") has the nginx equivalent of the
-# security headers and the www redirect.
+# One of those files, _headers, is a Cloudflare Pages convention and does nothing on other hosts;
+# the build writes the same headers to headers.nginx.conf for nginx to include, so the two never
+# drift. DEPLOY.md ("Escape hatch: any plain host") has the server config and the www redirect.
 set -euo pipefail
 
 if [ -z "${DEPLOY_TARGET:-}" ]; then

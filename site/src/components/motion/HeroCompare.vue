@@ -77,7 +77,7 @@ onMounted(async () => {
   <div
     role="group"
     aria-label="Leasehold compared with freehold over ten years"
-    class="grid gap-10 pt-10 md:grid-cols-2 md:gap-0"
+    class="grid pt-10 md:grid-cols-2"
   >
     <div ref="leaseEl" role="group" aria-labelledby="compare-leasehold" class="md:pr-10">
       <p id="compare-leasehold" class="font-sans text-h4 font-[650] text-muted">Leasehold</p>
@@ -92,7 +92,7 @@ onMounted(async () => {
       ref="freeholdEl"
       role="group"
       aria-labelledby="compare-freehold"
-      class="md:border-l md:border-rule md:pl-10"
+      class="mt-8 border-t border-rule pt-8 md:mt-0 md:border-t-0 md:border-l md:pt-0 md:pl-10"
     >
       <p id="compare-freehold" class="font-sans text-h4 font-[650] text-muted">Freehold</p>
       <p class="mt-3 font-serif text-h2 font-semibold tracking-[-0.01em] text-accent">$0 a month</p>

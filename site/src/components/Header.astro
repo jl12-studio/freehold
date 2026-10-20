@@ -10,16 +10,17 @@ const { wide = false } = Astro.props;
 
 const nav = [
   { href: '/', label: 'Philosophy' },
-  { href: '/standard', label: 'Standard' },
-  { href: '/feed', label: 'Feed' },
-  { href: '/marketplace', label: 'Marketplace' },
+  { href: '/standard/', label: 'Standard' },
+  { href: '/feed/', label: 'Feed' },
+  { href: '/marketplace/', label: 'Marketplace' },
 ];
 
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 
 function current(href: string): 'page' | 'true' | undefined {
-  if (path === href) return 'page';
-  if (href !== '/' && path.startsWith(`${href}/`)) return 'true';
+  const target = href.replace(/\/+$/, '') || '/';
+  if (path === target) return 'page';
+  if (target !== '/' && path.startsWith(`${target}/`)) return 'true';
   return undefined;
 }
 ---

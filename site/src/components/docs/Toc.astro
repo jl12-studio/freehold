@@ -1,8 +1,10 @@
 ---
 /*
  * Table of contents for the document pages (DESIGN.md, "Table of contents").
- * Renders two siblings of .doc-grid: the mobile <details> (below lg, no JS) and
- * the sticky desktop <nav> (lg and up). Only h2 and h3 appear; links are #<slug>.
+ * One copy of the entries, in a single <details>: below lg it is the collapsible
+ * "Contents" block above the article; from lg the summary is hidden, the content
+ * is forced open with ::details-content, and the block sticks under the header.
+ * No JavaScript either way. Only h2 and h3 appear; links are #<slug>.
  */
 import type { MarkdownHeading } from 'astro';
 
@@ -13,34 +15,38 @@ interface Props {
 const items = Astro.props.headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 ---
 
-<details class="toc-mobile mb-10 border-y border-rule font-sans text-ui lg:hidden">
-  <summary class="cursor-pointer py-3 font-[560] text-fg marker:text-muted">Contents</summary>
-  <ol class="space-y-2 pb-4">
-    {
-      items.map((item) => (
-        <li class:list={[item.depth === 3 && 'pl-4']}>
-          <a href={`#${item.slug}`} class="text-muted no-underline hover:text-fg">
-            {item.text}
-          </a>
-        </li>
-      ))
-    }
-  </ol>
-</details>
-
-<nav aria-label="Contents" class="toc hidden lg:block">
-  <div class="sticky top-[var(--header-offset)] font-sans text-caption">
-    <p class="label mb-3 font-[600] tracking-[0.02em] text-fg">Contents</p>
-    <ol class="space-y-2 border-l border-rule">
-      {
-        items.map((item) => (
-          <li class:list={[item.depth === 3 ? 'pl-7' : 'pl-4']}>
-            <a href={`#${item.slug}`} class="block text-muted no-underline hover:text-fg">
-              {item.text}
-            </a>
-          </li>
-        ))
-      }
-    </ol>
-  </div>
+<nav aria-label="Contents" class="toc-nav">
+  <details class="toc mb-10 border-y border-rule font-sans text-ui lg:sticky lg:top-[var(--header-offset)] lg:mb-0 lg:border-0 lg:text-caption">
+    <summary class="cursor-pointer py-3 font-[560] text-fg marker:text-muted">Contents</summary>
+    <div class="pb-3 lg:pb-0">
+      <p class="label mb-3 hidden font-[600] tracking-[0.02em] text-fg lg:block">Contents</p>
+      <ol class="lg:space-y-2 lg:border-l lg:border-rule">
+        {
+          items.map((item) => (
+            <li class:list={[item.depth === 3 ? 'pl-4 lg:pl-7' : 'lg:pl-4']}>
+              <a href={`#${item.slug}`} class="block py-2 text-muted no-underline hover:text-fg lg:py-0">
+                {item.text}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </details>
 </nav>
+
+<style>
+  /* From lg, the one <details> becomes the always-open desktop list. */
+  @media (min-width: 64rem) {
+    @supports selector(::details-content) {
+      .toc > summary {
+        display: none;
+      }
+
+      .toc::details-content {
+        display: block;
+        content-visibility: visible;
+      }
+    }
+  }
+</style>

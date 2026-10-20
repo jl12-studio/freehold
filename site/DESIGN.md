@@ -157,7 +157,7 @@ section.hero (aria-label="Freehold"), left aligned to the wide frame
   p   "Freehold"                         font-serif text-display font-[560] tracking-[-0.03em] text-fg
   p   one-line definition                mt-5 sm:mt-6 max-w-measure font-serif text-lead italic text-fg
   p   sub-line (one sentence)            mt-3 max-w-measure font-sans text-ui text-muted
-  p.label  "Updated <time>"              mt-6, date from the PHILOSOPHY.md Log, en-US long form ("October 20, 2026")
+  p.label  "Updated <time>"              mt-6, date from the PHILOSOPHY.md Log, day-first long form via formatLogDate ("20 October 2026")
   div.hero-slot[data-slot=comparison]    lg:mt-16 lg:border-t border-rule; the M3 comparison island mounts here
 div.doc-grid                             mt-10 sm:mt-12 lg:mt-14
 ```
@@ -171,8 +171,9 @@ div.doc-grid                             mt-10 sm:mt-12 lg:mt-14
 Shape in `src/pages/index.astro`. The page passes `wide` to `BaseLayout`.
 
 - Grid from `lg`: `lg:grid lg:grid-cols-[var(--container-toc)_minmax(0,var(--container-measure))] lg:gap-x-16`. Left column `nav.toc` (`aria-label="Contents"`), right column the `article.prose`.
-- Desktop TOC: the inner `div` is `sticky top-[var(--header-offset)]`, `font-sans text-caption`. A `.label` heading "Contents" in `text-fg` weight 600. An `<ol>` with `border-l border-rule`, items `pl-4` (depth 2) or `pl-7` (depth 3), links `text-muted` with no underline, hover `text-fg`. Only h2 and h3 appear. No scroll-spy highlight in v1 (it would need JavaScript).
-- Below `lg`: the same entries render once more inside `<details class="toc-mobile ... lg:hidden">` with `<summary>Contents</summary>`, closed by default, placed above the article, between `border-y border-rule` hairlines, `font-sans text-ui`, depth 3 indented `pl-4`. The desktop `nav` is `hidden lg:block`, so only one copy is ever exposed to assistive tech.
+- One copy of the entries, in `nav.toc-nav[aria-label="Contents"]` holding a single `<details class="toc">`. Only h2 and h3 appear. No scroll-spy highlight in v1 (it would need JavaScript).
+- Below `lg`: the `<details>` is closed by default with `<summary>Contents</summary>`, placed above the article between `border-y border-rule` hairlines, `font-sans text-ui`, depth 3 indented `pl-4`. Each link is `block py-2`, so a tap target is at least 2rem tall.
+- From `lg`: the `<details>` is `sticky top-[var(--header-offset)]`, `font-sans text-caption`, the `summary` is hidden and the content is forced open with `.toc::details-content { content-visibility: visible }` (inside `@supports selector(::details-content)`; a browser without it keeps the collapsible summary, which still works). A `.label` heading "Contents" in `text-fg` weight 600 shows only here. The `<ol>` has `border-l border-rule`, items `pl-4` (depth 2) or `pl-7` (depth 3), links `text-muted` with no underline, hover `text-fg`.
 
 ## Marketplace cards (`/marketplace`)
 

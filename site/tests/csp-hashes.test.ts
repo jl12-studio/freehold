@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import cspHashes, { extractInlineScripts, scriptSource, withScriptHashes } from '../src/integrations/csp-hashes';
+import cspHashes, { NGINX_HEADERS_FILE, extractInlineScripts, scriptSource, toNginxHeaders, withScriptHashes } from '../src/integrations/csp-hashes';
 
 const sha = (body: string) => `'sha256-${createHash('sha256').update(body).digest('base64')}'`;
 const POLICY = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; object-src 'none'";
@@ -87,6 +87,36 @@ describe('the astro:build:done hook', () => {
     const written = readFileSync(join(dist, '_headers'), 'utf8');
     expect(written).toContain(`script-src 'self' ${[sha('one();'), sha('two();')].sort().join(' ')};`);
     expect(readFileSync(join(pub, '_headers'), 'utf8')).toBe(HEADERS);
+
+    const nginx = readFileSync(join(dist, NGINX_HEADERS_FILE), 'utf8');
+    expect(nginx).toBe(toNginxHeaders(written));
+    expect(nginx).toContain(sha('one();'));
+  });
+});
+
+describe('toNginxHeaders', () => {
+  it('turns every header line of the /* block into an add_header line with the exact value', () => {
+    const lines = toNginxHeaders(HEADERS).trim().split('\n');
+    expect(lines[0]).toMatch(/^# Generated/);
+    expect(lines.slice(1)).toEqual([
+      `add_header Content-Security-Policy "${POLICY}" always;`,
+      'add_header X-Frame-Options "DENY" always;',
+    ]);
+  });
+
+  it('carries the script hashes, so the plain-host policy matches Cloudflare exactly', () => {
+    const hashed = withScriptHashes(HEADERS, ['a();']);
+    expect(toNginxHeaders(hashed)).toContain(`script-src 'self' ${sha('a();')};`);
+  });
+
+  it('stops at the end of the first block and escapes double quotes', () => {
+    const out = toNginxHeaders('/*\n  X-Test: say "hi"\n/other\n  X-Other: no\n');
+    expect(out).toContain('add_header X-Test "say \\"hi\\"" always;');
+    expect(out).not.toContain('X-Other');
+  });
+
+  it('fails loudly without a /* block', () => {
+    expect(() => toNginxHeaders('X-Test: a\n')).toThrow(/nginx/);
   });
 });
 

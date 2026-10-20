@@ -1,70 +1,67 @@
 import { describe, expect, it } from 'vitest';
-import { rewriteRootLinks } from '../src/lib/rewrite-links';
+import { rewriteHref, rewriteRootLinksPlugin, type UrlNode } from '../src/lib/rewrite-links';
 
 const options = { repoUrl: 'https://github.com/freeholders/freehold', branch: 'main' };
+const rewrite = (url: string) => rewriteHref(url, options);
 
-type Node = { type: string; url?: string; children?: Node[] };
-
-/** Run the plugin over a minimal mdast tree holding one link, and return the link's url. */
-function rewrite(url: string): string {
-  const link: Node = { type: 'link', url, children: [{ type: 'text' }] };
-  const tree: Node = { type: 'root', children: [{ type: 'paragraph', children: [link] }] };
-  rewriteRootLinks(options)(tree as never);
-  return link.url as string;
-}
-
-describe('rewriteRootLinks', () => {
-  it('sends FRAMEWORK.md to /standard', () => {
-    expect(rewrite('FRAMEWORK.md')).toBe('/standard');
+describe('rewriteHref', () => {
+  it('sends FRAMEWORK.md to /standard/', () => {
+    expect(rewrite('FRAMEWORK.md')).toBe('/standard/');
   });
 
-  it('sends PHILOSOPHY.md#the-roadmap to /#the-roadmap, keeping the fragment', () => {
+  it('sends PHILOSOPHY.md to / and keeps a fragment', () => {
     expect(rewrite('PHILOSOPHY.md#the-roadmap')).toBe('/#the-roadmap');
   });
 
-  it('strips a leading ../ and sends ../PHILOSOPHY.md to /', () => {
+  it('strips a leading ../ first', () => {
     expect(rewrite('../PHILOSOPHY.md')).toBe('/');
   });
 
-  it('strips a leading ./', () => {
-    expect(rewrite('./FRAMEWORK.md')).toBe('/standard');
-  });
-
-  it('sends README.md to the repo readme', () => {
+  it('sends README.md to the repository readme', () => {
     expect(rewrite('README.md')).toBe('https://github.com/freeholders/freehold#readme');
   });
 
-  it('sends any other .md path to the blob URL on the branch', () => {
+  it('sends any other Markdown file to its GitHub blob', () => {
     expect(rewrite('raw/x.md')).toBe('https://github.com/freeholders/freehold/blob/main/raw/x.md');
-    expect(rewrite('raw/2026-07-29-founding-thoughts-verbatim.md')).toBe(
-      'https://github.com/freeholders/freehold/blob/main/raw/2026-07-29-founding-thoughts-verbatim.md',
+    expect(rewrite('drafts/2026-10-10-reddit-reply.md')).toBe(
+      'https://github.com/freeholders/freehold/blob/main/drafts/2026-10-10-reddit-reply.md',
     );
   });
 
-  it('sends a repo directory link (ends in /) to the tree URL on the branch', () => {
+  it('sends a directory link to its GitHub tree', () => {
     expect(rewrite('raw/')).toBe('https://github.com/freeholders/freehold/tree/main/raw/');
-    expect(rewrite('../drafts/')).toBe('https://github.com/freeholders/freehold/tree/main/drafts/');
   });
 
-  it('leaves an absolute URL with a scheme unchanged', () => {
+  it('leaves absolute URLs alone', () => {
     expect(rewrite('https://example.com/a.md')).toBe('https://example.com/a.md');
   });
 
-  it('leaves a same-page #anchor unchanged', () => {
+  it('leaves same-page anchors and root-relative paths alone', () => {
     expect(rewrite('#anchor')).toBe('#anchor');
+    expect(rewrite('/feed/')).toBe('/feed/');
+  });
+});
+
+describe('rewriteRootLinksPlugin (Sätteri mdast plugin)', () => {
+  function run(node: UrlNode) {
+    const calls: Array<[UrlNode, string, string]> = [];
+    const plugin = rewriteRootLinksPlugin(options);
+    plugin.link(node, { setProperty: (n, key, value) => calls.push([n, key, value]) });
+    return calls;
+  }
+
+  it('has a name and visits links and definitions with the same rule', () => {
+    const plugin = rewriteRootLinksPlugin(options);
+    expect(plugin.name).toBe('freehold-rewrite-root-links');
+    expect(plugin.definition).toBe(plugin.link);
   });
 
-  it('leaves a root-relative path unchanged', () => {
-    expect(rewrite('/standard')).toBe('/standard');
+  it('sets url through the context when the href changes', () => {
+    const node = { type: 'link', url: 'FRAMEWORK.md' };
+    expect(run(node)).toEqual([[node, 'url', '/standard/']]);
   });
 
-  it('rewrites links nested deep in the tree', () => {
-    const link: Node = { type: 'link', url: 'FRAMEWORK.md' };
-    const tree: Node = {
-      type: 'root',
-      children: [{ type: 'list', children: [{ type: 'listItem', children: [{ type: 'paragraph', children: [link] }] }] }],
-    };
-    rewriteRootLinks(options)(tree as never);
-    expect(link.url).toBe('/standard');
+  it('touches nothing when the href is already fine', () => {
+    expect(run({ type: 'link', url: 'https://example.com/' })).toEqual([]);
   });
 });

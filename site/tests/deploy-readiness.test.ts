@@ -44,10 +44,8 @@ describe('Cloudflare Pages config', () => {
     expect(headers).toContain('X-Frame-Options: DENY');
   });
 
-  it('redirects www to the apex with a 301 that keeps the path', () => {
-    expect(read('public/_redirects').trim().split('\n')).toEqual([
-      'https://www.freeholders.org/* https://freeholders.org/:splat 301',
-    ]);
+  it('has no _redirects file: the www redirect is a Cloudflare dashboard rule, and a file line would silently do nothing', () => {
+    expect(existsSync(join(siteRoot, 'public/_redirects'))).toBe(false);
   });
 
   it('allows all crawlers and points at the sitemap index', () => {
@@ -68,9 +66,9 @@ describe('the 404 page', () => {
     const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
     for (const [href, label] of [
       ['/', 'Philosophy'],
-      ['/standard', 'Standard'],
-      ['/feed', 'Feed'],
-      ['/marketplace', 'Marketplace'],
+      ['/standard/', 'Standard'],
+      ['/feed/', 'Feed'],
+      ['/marketplace/', 'Marketplace'],
     ]) {
       expect(main, `${label} link`).toMatch(new RegExp(`<a[^>]*href="${href}"[^>]*>\\s*${label}\\s*<`));
     }
@@ -160,10 +158,11 @@ describe('scripts/deploy-static.sh', () => {
     expect(r.calls).toEqual(['pnpm build', 'rsync -az --delete dist/ user@host:/var/www/freeholders.org/']);
   });
 
-  it('explains at the top that _headers and _redirects are Cloudflare-specific', () => {
+  it('explains at the top that _headers is Cloudflare-specific and headers.nginx.conf is its twin', () => {
     const head = readFileSync(script, 'utf8').split('\n').slice(0, 12).join('\n');
     expect(head).toContain('_headers');
-    expect(head).toContain('_redirects');
+    expect(head).toContain('headers.nginx.conf');
+    expect(head).not.toContain('_redirects');
     expect(head).toContain('DEPLOY.md');
   });
 });
@@ -194,6 +193,7 @@ describe('DEPLOY.md', () => {
       'pnpm dlx wrangler login',
       'pnpm deploy',
       'DEPLOY_TARGET=user@host:/path ./scripts/deploy-static.sh',
+      'include /var/www/freeholders.org/headers.nginx.conf;',
       'curl -sI https://freeholders.org | grep -i content-security-policy',
       '/feed.xml',
       '/registry.json',
