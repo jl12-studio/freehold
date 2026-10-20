@@ -190,7 +190,7 @@ describe('DEPLOY.md', () => {
 
   it('carries the exact commands Marcus will run', () => {
     for (const needle of [
-      'freeholders/freehold',
+      'jl12-studio/freehold',
       'pnpm dlx wrangler login',
       'pnpm deploy',
       'DEPLOY_TARGET=user@host:/path ./scripts/deploy-static.sh',

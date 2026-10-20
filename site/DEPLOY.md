@@ -15,11 +15,13 @@ Everything else (`robots.txt`, `sitemap-index.xml`, `404.html`, `og.png`, the fe
 
 ## Steady state: Cloudflare Pages from GitHub
 
+Current state (2026-10-20): the repository is public at `jl12-studio/freehold`, and the live Pages project `freeholders-org` was created from the command line, so it deploys with `pnpm deploy` (see the next section). Cloudflare cannot connect an existing command-line project to Git. To switch to deploy-on-push, create a second project from Git with the steps below (for example `freeholders-org-git`), move the custom domains to it, then delete `freeholders-org`.
+
 Deploys happen on every push to `main`. Do this once:
 
-1. Push this repository to GitHub as `freeholders/freehold` (public). If you use a different name, update `repoUrl` in `src/config.ts`.
+1. Push this repository to GitHub (it lives at `jl12-studio/freehold`, public). If it moves, update `repoUrl` in `src/config.ts`.
 2. In the Cloudflare dashboard open **Workers & Pages**, then **Create**, then the **Pages** tab, then **Connect to Git**.
-3. Choose the repository `freeholders/freehold`.
+3. Choose the repository `jl12-studio/freehold`.
 4. Set the build configuration:
    - Project name: `freeholders-org`
    - Production branch: `main`
