@@ -1,0 +1,34 @@
+---
+/*
+ * One marketplace card (DESIGN.md, "Marketplace cards"). The name is the link,
+ * stretched over the whole card; no fill, no shadow, no hover lift.
+ */
+import StatusBadge from '../ui/StatusBadge.astro';
+import { passCount, type RegistryEntry } from '../../lib/registry';
+
+interface Props {
+  entry: RegistryEntry;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { pass, na } = passCount(entry);
+---
+
+<li
+  class="relative rounded-[var(--radius-md)] border border-rule p-5 transition-colors duration-[var(--motion-fast)] ease-out hover:border-muted sm:p-6"
+>
+  <h2 class="font-serif text-h3">
+    <a
+      href={`/marketplace/${entry.id}/`}
+      class="no-underline after:absolute after:inset-0 after:content-['']"
+    >{data.name}</a>
+  </h2>
+  <p class="mt-2 text-muted">{data.oneLine}</p>
+  <p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-sans text-caption text-muted">
+    <StatusBadge status={data.status} />
+    <span class="capitalize">{data.stage}</span>
+    <span class="tabular-nums">{pass} of 10 pass</span>
+    {na > 0 && <span class="tabular-nums">{na} not applicable at this stage</span>}
+  </p>
+</li>

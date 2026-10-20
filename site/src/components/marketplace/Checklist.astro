@@ -1,0 +1,44 @@
+---
+/*
+ * The ten-point checklist for one entry (DESIGN.md, "Checklist layout").
+ * Rows are joined to STANDARD_POINTS by point number.
+ */
+import PointStatus from '../ui/PointStatus.astro';
+import { STANDARD_POINTS } from '../../lib/standard';
+import type { RegistryData } from '../../lib/registry';
+
+interface Props {
+  standard: RegistryData['standard'];
+}
+
+const { standard } = Astro.props;
+const rowFor = new Map(standard.map((row) => [row.point, row]));
+---
+
+<ol class="checklist">
+  {
+    STANDARD_POINTS.map(({ point, title }) => {
+      const row = rowFor.get(point);
+      return (
+        <li class="border-b border-rule py-4" data-point={point}>
+          <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            <span class="w-8 shrink-0 font-sans text-caption text-muted tabular-nums">{point}</span>
+            <span class="min-w-0 flex-1 font-serif text-body">{title}</span>
+            {row && <PointStatus status={row.status} class="ml-auto" />}
+          </div>
+          {row && (row.note || row.evidence) && (
+            <p class="mt-1 pl-8 text-muted">
+              {row.note}
+              {row.note && row.evidence && ' '}
+              {row.evidence && (
+                <a href={row.evidence} class="text-fg underline decoration-accent/55 underline-offset-[0.2em] hover:text-accent">
+                  Evidence
+                </a>
+              )}
+            </p>
+          )}
+        </li>
+      );
+    })
+  }
+</ol>

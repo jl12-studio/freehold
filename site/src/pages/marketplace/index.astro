@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AppCard from '../../components/marketplace/AppCard.astro';
+import { site } from '../../config';
+
+const entries = (await getCollection('registry')).sort((a, b) => a.data.name.localeCompare(b.data.name, 'en'));
+---
+
+<BaseLayout
+  title="Marketplace"
+  description="Software that meets the Freehold Standard, scored point by point."
+  wide
+>
+  <h1 class="font-serif text-h1 font-semibold tracking-[-0.015em]">Marketplace</h1>
+  <p class="mt-5 max-w-measure font-serif text-lead text-fg italic">
+    Software that meets the Freehold Standard. An app is listed because it passes the checklist, not because anyone likes it.
+    This is one registry; the standard permits others.
+  </p>
+
+  <ul class="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-2">
+    {entries.map((entry) => <AppCard entry={entry} />)}
+  </ul>
+
+  <section class="mt-16 max-w-measure sm:mt-24" aria-labelledby="list-yours">
+    <article class="prose">
+      <h2 id="list-yours">List your software</h2>
+      <ol>
+        <li>Fork the <a href={site.repoUrl}>Freehold repository</a>.</li>
+        <li>
+          Add <code>site/src/content/registry/&lt;slug&gt;.yaml</code>, following <code>freehold-ledger.yaml</code>.
+        </li>
+        <li>Open a pull request.</li>
+      </ol>
+      <p>The checklist is the certification. Nobody grants it; the standard is public and you check your software against it.</p>
+      <p>Agents and other registries: <a href="/registry.json">the same list as JSON</a>.</p>
+    </article>
+  </section>
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+/*
+ * Date line for a post: "20 October 2026", plus a "Draft" marker in dev only
+ * (drafts never ship in a build). Dates use formatLogDate, same as the hero.
+ */
+import { formatLogDate } from '../../lib/log-date';
+
+interface Props {
+  date: Date;
+  draft?: boolean;
+}
+
+const { date, draft = false } = Astro.props;
+const iso = date.toISOString().slice(0, 10);
+---
+
+<p class="label flex flex-wrap items-center gap-x-3 gap-y-1">
+  <time datetime={iso}>{formatLogDate(iso)}</time>
+  {
+    draft && (
+      <span class="rounded-[3px] border border-muted px-1.5 text-fg" data-draft>
+        Draft
+      </span>
+    )
+  }
+</p>

@@ -1,0 +1,19 @@
+name: Freehold Ledger
+oneLine: Bookkeeping for a very small business, by conversation, in a database you own.
+status: planned
+stage: desktop
+maintainer:
+  name: Marcus Salinas
+  url: https://jippylong12.xyz
+updated: 2026-10-20
+standard:
+  - { point: 1, status: not-yet, note: "License chosen when the repo is created." }
+  - { point: 2, status: n/a, note: "Deploy-anywhere applies from the Cloud stage. This is the Desktop stage." }
+  - { point: 3, status: not-yet, note: "The built-in MCP server is milestone 3 of the app." }
+  - { point: 4, status: n/a, note: "Sync applies from the Cloud stage." }
+  - { point: 5, status: not-yet, note: "Append-mostly ledger; the conflict story is declared with the data model." }
+  - { point: 6, status: not-yet }
+  - { point: 7, status: not-yet }
+  - { point: 8, status: not-yet }
+  - { point: 9, status: not-yet, note: "The primary interface is conversation through MCP." }
+  - { point: 10, status: not-yet }

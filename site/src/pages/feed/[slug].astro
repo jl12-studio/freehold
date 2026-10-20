@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostMeta from '../../components/feed/PostMeta.astro';
+import { publishedPosts, slugFromId } from '../../lib/feed';
+import { site } from '../../config';
+
+export async function getStaticPaths() {
+  const posts = publishedPosts(await getCollection('feed'), import.meta.env.DEV);
+  return posts.map((post) => ({ params: { slug: slugFromId(post.id) }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const rawUrl = post.data.raw ? `${site.repoUrl}/blob/${site.repoBranch}/${post.data.raw}` : null;
+const linkClass =
+  'underline decoration-accent/55 decoration-1 underline-offset-[0.2em] transition-colors duration-[var(--motion-fast)] ease-out hover:text-accent hover:decoration-accent';
+---
+
+<BaseLayout title={post.data.title} description={post.data.summary}>
+  <article>
+    <header>
+      <PostMeta date={post.data.date} draft={post.data.draft} />
+      <h1 class="mt-1.5 font-serif text-h1 font-semibold tracking-[-0.015em] text-fg">{post.data.title}</h1>
+    </header>
+
+    <div class="prose mt-8 sm:mt-10">
+      <Content />
+    </div>
+
+    {
+      rawUrl && (
+        <p class="mt-10 font-serif text-body text-muted">
+          <a href={rawUrl} class={linkClass}>
+            Read the verbatim capture this grew from
+          </a>
+        </p>
+      )
+    }
+  </article>
+
+  <p class="mt-10 font-sans text-ui text-muted">
+    <a href="/feed/" class={linkClass}>Back to the feed</a>
+  </p>
+</BaseLayout>
