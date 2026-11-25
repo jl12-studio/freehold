@@ -64,7 +64,7 @@ Build in this order. Each step is a milestone that works on its own before the n
 
 **Explicitly out of scope for v1:** invoicing, payroll, multi-user, bank integrations, tax *advice* (the AI layer handles knowledge; this app is the trusted place to track).
 
-**Where it lives:** its own repo, `~/Programming/Personal/freehold-ledger` (decided 2026-10-20; not created yet). The `freehold` repo is the philosophy, the standard, and the site only; apps are never inside it, they're listed by the marketplace page. Other people's Freehold software lives wherever they like. **Name decided 2026-10-20: Freehold Ledger.** Tracked in Linear: https://linear.app/jippylong12/project/freehold-ledger-3aeec41a94a4
+**Where it lives:** its own repo, `~/Programming/Freehold Apps/freehold-ledger` (own repo decided 2026-10-20; created there 2026-10-27; source at https://github.com/jl12-studio/freehold-ledger; certified at the Desktop grade). The `freehold` repo is the philosophy, the standard, and the site only; apps are never inside it, they're listed by the marketplace page. Other people's Freehold software lives wherever they like. **Name decided 2026-10-20: Freehold Ledger.** Tracked in Linear: https://linear.app/jippylong12/project/freehold-ledger-3aeec41a94a4
 
 ## Part 4: Open build questions
 
