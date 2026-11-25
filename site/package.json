@@ -11,7 +11,7 @@
     "check": "astro check",
     "test": "vitest run",
     "og": "node scripts/make-og.mjs",
-    "deploy": "astro build && wrangler pages deploy dist --project-name freeholders-org",
+    "deploy": "astro build && CLOUDFLARE_ACCOUNT_ID=5333ed6c86c4ac04c428d6f229033aa7 wrangler pages deploy dist --project-name freeholders-org",
     "astro": "astro"
   },
   "dependencies": {

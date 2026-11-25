@@ -1,6 +1,5 @@
 name = "freeholders-org"
-# Marcus's own Cloudflare account. Pinned because wrangler is logged in to two accounts
-# and will not choose one in non-interactive runs. Account IDs are not secrets.
-account_id = "5333ed6c86c4ac04c428d6f229033aa7"
+# The Cloudflare account is pinned in package.json's deploy script through
+# CLOUDFLARE_ACCOUNT_ID: Pages config files do not accept account_id.
 compatibility_date = "2026-10-01"
 pages_build_output_dir = "dist"
