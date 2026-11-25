@@ -22,6 +22,15 @@ describe('Cloudflare Pages config', () => {
     expect(toml).toContain('pages_build_output_dir = "dist"');
   });
 
+  it('pins the Cloudflare account in the deploy script, not in wrangler.toml, which Pages deploys reject', () => {
+    const toml = read('wrangler.toml');
+    expect(toml).not.toMatch(/^\s*account_id\s*=/m);
+    const pkg = JSON.parse(read('package.json'));
+    expect(pkg.scripts.deploy).toBe(
+      'astro build && CLOUDFLARE_ACCOUNT_ID=5333ed6c86c4ac04c428d6f229033aa7 wrangler pages deploy dist --project-name freeholders-org',
+    );
+  });
+
   it('serves a CSP that allows only this origin plus Google Analytics, and the companion security headers, on every path', () => {
     const headers = read('public/_headers');
     expect(headers.split('\n')[0]).toBe('/*');
