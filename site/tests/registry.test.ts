@@ -112,4 +112,38 @@ describe('toRegistryJson', () => {
     expect('repo' in e).toBe(false);
     expect('homepage' in e).toBe(false);
   });
+
+  const newFields = ['license', 'install', 'release', 'checklist', 'guides', 'agentPrompt'];
+
+  it('omits every new field when absent, so an old entry serializes with no new keys', () => {
+    const [e] = toRegistryJson([entry('a', data('A', fixture))], siteUrl, generated).entries;
+    expect(Object.keys(e)).toEqual(['slug', 'name', 'oneLine', 'status', 'stage', 'maintainer', 'updated', 'url', 'standard']);
+    for (const key of newFields) expect(key in e).toBe(false);
+  });
+
+  it('emits the new fields when present, in order after homepage', () => {
+    const d = data('A', fixture, {
+      homepage: 'https://example.org',
+      license: 'AGPL-3.0-or-later',
+      install: 'https://example.org/install.md',
+      release: 'https://example.org/releases',
+      checklist: 'https://example.org/checklist.md',
+      guides: { human: 'https://example.org/h.md', agent: 'https://example.org/a.md' },
+      agentPrompt: 'Install A from https://example.org/install.md.',
+    });
+    const [e] = toRegistryJson([entry('a', d)], siteUrl, generated).entries;
+    expect(Object.keys(e)).toEqual([
+      'slug', 'name', 'oneLine', 'status', 'stage', 'homepage', 'license', 'install', 'release', 'checklist', 'guides', 'agentPrompt',
+      'maintainer', 'updated', 'url', 'standard',
+    ]);
+    expect(e.license).toBe('AGPL-3.0-or-later');
+    expect(e.guides).toEqual({ human: 'https://example.org/h.md', agent: 'https://example.org/a.md' });
+  });
+
+  it('carries guides.agent only when human is missing', () => {
+    const d = data('A', fixture, { guides: { agent: 'https://example.net/a.md' } });
+    const [e] = toRegistryJson([entry('a', d)], siteUrl, generated).entries;
+    expect(e.guides).toEqual({ agent: 'https://example.net/a.md' });
+    expect('human' in (e.guides ?? {})).toBe(false);
+  });
 });

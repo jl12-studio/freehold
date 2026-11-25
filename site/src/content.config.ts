@@ -20,7 +20,7 @@ const feed = defineCollection({
 
 const pointStatus = z.enum(['pass', 'not-yet', 'n/a']);
 
-/** Registry links render as hrefs and ship in registry.json: web URLs only, never javascript: or data:. */
+/** Registry links (repo, homepage, install, checklist, release, guides, evidence, maintainer url) render as hrefs and ship in registry.json: web URLs only, never javascript: or data:. */
 const webUrl = z
   .string()
   .url()
@@ -35,6 +35,12 @@ const registry = defineCollection({
     stage: z.enum(['desktop', 'cloud', 'mobile']),
     repo: webUrl.optional(),
     homepage: webUrl.optional(),
+    install: webUrl.optional(),
+    checklist: webUrl.optional(),
+    release: webUrl.optional(),
+    guides: z.object({ human: webUrl.optional(), agent: webUrl.optional() }).optional(),
+    license: z.string().max(60).optional(),
+    agentPrompt: z.string().max(300).optional(),
     maintainer: z.object({ name: z.string(), url: webUrl.optional() }),
     updated: z.coerce.date(),
     standard: z

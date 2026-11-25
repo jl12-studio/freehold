@@ -12,6 +12,12 @@ export interface RegistryData {
   stage: EntryStage;
   repo?: string;
   homepage?: string;
+  license?: string;
+  install?: string;
+  release?: string;
+  checklist?: string;
+  guides?: { human?: string; agent?: string };
+  agentPrompt?: string;
   maintainer: { name: string; url?: string };
   updated: Date;
   standard: Array<{ point: number; status: PointResult; evidence?: string; note?: string }>;
@@ -57,6 +63,12 @@ export interface RegistryJsonEntry {
   stage: EntryStage;
   repo?: string;
   homepage?: string;
+  license?: string;
+  install?: string;
+  release?: string;
+  checklist?: string;
+  guides?: { human?: string; agent?: string };
+  agentPrompt?: string;
   maintainer: { name: string; url?: string };
   updated: string;
   url: string;
@@ -87,6 +99,12 @@ export function toRegistryJson(entries: ReadonlyArray<RegistryEntry>, siteUrl: s
       stage: data.stage,
       ...(data.repo ? { repo: data.repo } : {}),
       ...(data.homepage ? { homepage: data.homepage } : {}),
+      ...(data.license ? { license: data.license } : {}),
+      ...(data.install ? { install: data.install } : {}),
+      ...(data.release ? { release: data.release } : {}),
+      ...(data.checklist ? { checklist: data.checklist } : {}),
+      ...(data.guides ? { guides: data.guides } : {}),
+      ...(data.agentPrompt ? { agentPrompt: data.agentPrompt } : {}),
       maintainer: data.maintainer,
       updated: data.updated.toISOString().slice(0, 10),
       url: `${siteUrl}/marketplace/${id}/`,

@@ -18,7 +18,13 @@ pnpm run deploy # build and upload to Cloudflare Pages (needs wrangler login onc
 
 - `src/pages/` routes: `/`, `/standard`, `/feed`, `/feed/[slug]`, `/feed.xml`, `/marketplace`, `/marketplace/[slug]`, `/registry.json`, `/404`.
 - `src/content/feed/` one Markdown file per post, named `YYYY-MM-DD-slug.md`. Frontmatter: `title`, `date`, optional `summary`, optional `raw` (repo path of the verbatim capture), `draft`.
-- `src/content/registry/` one YAML file per Freehold app, scored against the 10 points. Copy `freehold-ledger.yaml` to start a new entry.
+- `src/content/registry/` one YAML file per Freehold app, scored against the 10 points. Copy `freehold-ledger.yaml` to start a new entry. Optional fields beyond the ten points, all http(s) links unless noted, each emitted in `registry.json` only when present:
+  - `license` an SPDX identifier such as `AGPL-3.0-or-later` (text, 60 characters at most).
+  - `install` the agent install guide.
+  - `release` where the pre-built release is downloaded.
+  - `checklist` the app's own Freehold self-check record.
+  - `guides.human` and `guides.agent` the human and agent guides; either may be given alone.
+  - `agentPrompt` the one sentence a person pastes to their agent (text, 300 characters at most).
 - `src/content.config.ts` the schemas for all three collections.
 - `src/lib/standard.ts` the 10 point titles, the one deliberate duplication of FRAMEWORK.md Part 1. Keep them in step.
 - `src/components/ui/` the shared deed pieces: `Mark`, `Ornament`, `Seal`, `StatusBadge`, `PointStatus`.
