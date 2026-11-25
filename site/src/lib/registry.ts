@@ -118,3 +118,25 @@ export function toRegistryJson(entries: ReadonlyArray<RegistryEntry>, siteUrl: s
     })),
   };
 }
+
+export interface GetItLink {
+  label: string;
+  href: string;
+}
+
+/** The "Get it" links for an entry, in visual order; a link appears only when its field exists. */
+export function getItLinks(data: RegistryData): GetItLink[] {
+  const candidates: Array<[string, string | undefined]> = [
+    ['Download for Mac', data.release],
+    ['Install steps', data.install],
+    ["The app's own checklist", data.checklist],
+    ['Guide for you', data.guides?.human],
+    ['Guide for your agent', data.guides?.agent],
+  ];
+  return candidates.flatMap(([label, href]) => (href ? [{ label, href }] : []));
+}
+
+/** Whether the detail page shows its "Get it" section at all. */
+export function hasGetIt(data: RegistryData): boolean {
+  return Boolean(data.agentPrompt || data.install || data.release);
+}

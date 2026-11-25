@@ -1,19 +1,28 @@
 name: Freehold Ledger
 oneLine: Bookkeeping for a very small business, by conversation, in a database you own.
-status: planned
+status: certified
 stage: desktop
+license: AGPL-3.0-or-later
+repo: https://github.com/jl12-studio/freehold-ledger
+install: https://github.com/jl12-studio/freehold-ledger/blob/main/INSTALL.md
+release: https://github.com/jl12-studio/freehold-ledger/releases/latest/download/Freehold-Ledger-universal.dmg
+checklist: https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md
+guides:
+  human: https://github.com/jl12-studio/freehold-ledger/blob/main/docs/HUMAN-GUIDE.md
+  agent: https://github.com/jl12-studio/freehold-ledger/blob/main/docs/AGENT-GUIDE.md
+agentPrompt: "Install Freehold Ledger for me. Follow https://github.com/jl12-studio/freehold-ledger/blob/main/INSTALL.md"
 maintainer:
   name: Marcus Salinas
   url: https://jippylong12.xyz
-updated: 2026-10-20
+updated: 2026-11-25
 standard:
-  - { point: 1, status: not-yet, note: "License chosen when the repo is created." }
-  - { point: 2, status: n/a, note: "Deploy-anywhere applies from the Cloud stage. This is the Desktop stage." }
-  - { point: 3, status: not-yet, note: "The built-in MCP server is milestone 3 of the app." }
-  - { point: 4, status: n/a, note: "Sync applies from the Cloud stage." }
-  - { point: 5, status: not-yet, note: "Append-mostly ledger; the conflict story is declared with the data model." }
-  - { point: 6, status: not-yet }
-  - { point: 7, status: not-yet }
-  - { point: 8, status: not-yet }
-  - { point: 9, status: not-yet, note: "The primary interface is conversation through MCP." }
-  - { point: 10, status: not-yet }
+  - { point: 1, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-1-free-and-owned-by-the-person", note: "AGPL. One SQLite file on your computer. No account, no telemetry, no network connection." }
+  - { point: 2, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-2-deployable-anywhere", note: "At the Desktop grade: a signed Mac release your agent installs. Server targets come with the Cloud grade." }
+  - { point: 3, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-3-speaks-mcp-natively", note: "The MCP server ships inside the app." }
+  - { point: 4, status: n/a, note: "Sync applies from the Cloud grade. At the Desktop grade there is one computer." }
+  - { point: 5, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-5-a-declared-conflict-story", note: "One file, one computer, append-only. Nothing to merge." }
+  - { point: 6, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-6-agent-operable-administration", note: "Your agent backs up, verifies and restores the books." }
+  - { point: 7, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-7-secure-by-default", note: "Nothing listens on the network. Full card numbers are refused." }
+  - { point: 8, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-8-self-carrying-upgrades", note: "Older ledger files upgrade when opened. Staying on a version keeps working." }
+  - { point: 9, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-9-usable-by-conversation", note: "The whole founding scene runs by talking to your agent." }
+  - { point: 10, status: pass, evidence: "https://github.com/jl12-studio/freehold-ledger/blob/main/FREEHOLD.md#point-10-teaches-while-it-works", note: "Every answer explains what was recorded and what to watch at tax time." }

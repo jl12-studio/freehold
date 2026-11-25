@@ -204,6 +204,17 @@ Shared pieces, all in `global.css` or `src/components/ui/`. Use these instead of
 
 The project calls for cards here, so this is the one page that gets them, and they stay quiet: an `<ul class="grid gap-4 sm:grid-cols-2">`, each card an `<li>` with `border border-rule rounded-[var(--radius-md)] p-5 sm:p-6`, no fill, no shadow, no hover lift (hover changes only the border to `border-muted` over `--motion-fast`). Inside, top to bottom: the name (`font-serif text-h3`, the whole name is the link, stretched over the card with an `after:absolute after:inset-0` on a `relative` card), the one line (`text-muted`, `mt-2`), and a meta row (`mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-sans text-caption text-muted`) holding `StatusBadge`, the stage word, and the pass count as "7 of 10 pass" (`tabular-nums`). The "List your software" section below the grid is ordinary `.prose`.
 
+## Get it (`/marketplace/<slug>`)
+
+The section between the header block and "The checklist" that answers "how do I get this". It renders only when the entry has `agentPrompt`, `install` or `release`; otherwise the page is unchanged. `<section aria-labelledby="get-heading">` with an `h2` "Get it" (`font-serif text-h2 font-semibold`), one `text-muted` line ("Paste this to your agent. It downloads the app, checks it, installs it and connects itself."), the sentence, then a links row.
+
+- The sentence: no card fill, no shadow, no gradient. `.rule-double-t .rule-double-b` with `py-5`, `font-serif text-lead text-fg`, selectable, `overflow-wrap: anywhere` so a long URL wraps at 375px. The element carries no `::before` or `::after` of its own, because the double rule classes use them.
+- Copy: a real `<button type="button">` under the sentence, `font-sans text-ui`, `border border-rule rounded-[var(--radius-md)] px-4 py-2`, `min-h-11` (44px) and a fixed min-width so the label change shifts nothing, hover `border-muted` over `--motion-fast`, focus ring from the global `:focus-visible`. On success the label reads "Copied" for 2 seconds and a visually hidden `role="status"` `aria-live="polite"` region says "Copied to clipboard". If `navigator.clipboard` is missing or rejects, the sentence is selected and "Press Ctrl or Cmd C to copy" shows in the same region. Never silent.
+- Script: a Vue island (`CopyPrompt.vue`, `client:visible`), so the CSP stays `script-src 'self'` with no new hash. The button is `hidden` in the server HTML and appears on hydration; with JavaScript off the sentence stays visible and no dead button shows.
+- Links row: `mt-4 flex flex-wrap gap-x-4 gap-y-1 font-sans text-ui text-muted`, anchors use the `link` class and `rel="noopener"`, each only when its field exists, in this order: "Download for Mac" (`release`), "Install steps" (`install`), "The app's own checklist" (`checklist`), "Guide for you" (`guides.human`), "Guide for your agent" (`guides.agent`). The list comes from `getItLinks` in `lib/registry.ts`.
+- The header meta row shows the license after the stage when present.
+- Motion: the color transition only; nothing else moves, so reduced motion needs no special case.
+
 ## Motion
 
 Motion serves reading: it orients (page transitions) and reveals (content arriving). It never decorates, loops, or delays reading.
