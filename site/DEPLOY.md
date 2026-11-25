@@ -50,7 +50,7 @@ pnpm dlx wrangler login   # once; opens a browser for Cloudflare
 pnpm run deploy           # builds, then uploads dist/ to the Pages project
 ```
 
-The first run creates the Pages project `freeholders-org` if it does not exist. Confirm when prompted. After that, `pnpm run deploy` is the whole command.
+The first run creates the Pages project `freeholders-org` if it does not exist. Confirm when prompted. After that, `pnpm run deploy` is the whole command. The Cloudflare account is pinned with `account_id` in `wrangler.toml` (pinned 2026-11-25), because the wrangler login can see more than one account and a non-interactive run refuses to guess.
 
 To preview the headers locally before uploading anything:
 
