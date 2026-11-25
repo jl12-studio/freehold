@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AppCard from '../../components/marketplace/AppCard.astro';
 import { site } from '../../config';
+import Ornament from '../../components/ui/Ornament.astro';
 
 const entries = (await getCollection('registry')).sort((a, b) => a.data.name.localeCompare(b.data.name, 'en'));
 ---
@@ -13,6 +14,7 @@ const entries = (await getCollection('registry')).sort((a, b) => a.data.name.loc
   wide
 >
   <h1 class="font-serif text-h1 font-semibold tracking-[-0.015em]">Marketplace</h1>
+  <Ornament align="start" class="mt-5 max-w-[12rem]" />
   <p class="mt-5 max-w-measure font-serif text-lead text-fg italic">
     Software that meets the Freehold Standard. An app is listed because it passes the checklist, not because anyone likes it.
     This is one registry; the standard permits others.

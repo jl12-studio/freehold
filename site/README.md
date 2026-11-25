@@ -21,6 +21,7 @@ pnpm run deploy # build and upload to Cloudflare Pages (needs wrangler login onc
 - `src/content/registry/` one YAML file per Freehold app, scored against the 10 points. Copy `freehold-ledger.yaml` to start a new entry.
 - `src/content.config.ts` the schemas for all three collections.
 - `src/lib/standard.ts` the 10 point titles, the one deliberate duplication of FRAMEWORK.md Part 1. Keep them in step.
+- `src/components/ui/` the shared deed pieces: `Mark`, `Ornament`, `Seal`, `StatusBadge`, `PointStatus`.
 - `src/styles/global.css` design tokens and prose styles. `DESIGN.md` explains every decision and is binding for new UI.
 - `DEPLOY.md` the runbook: Cloudflare Pages from GitHub, manual deploy, and the plain-host escape hatch.
 

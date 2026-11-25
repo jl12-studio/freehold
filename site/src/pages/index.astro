@@ -1,12 +1,15 @@
 ---
 /*
  * The philosophy page: renders PHILOSOPHY.md from the repo root, never a copy.
- * Hero and .doc-grid shape per DESIGN.md. The hero slot below is reserved for
- * the animated comparison island (HeroCompare.vue).
+ * The hero is the deed's title block (DESIGN.md, "Hero"): eyebrow, mark and
+ * masthead, ornament, definition. The comparison island sits under it between
+ * double rules, then the doc-grid with numbered articles.
  */
 import { getEntry } from 'astro:content';
 import DocPage from '../components/docs/DocPage.astro';
 import HeroCompare from '../components/motion/HeroCompare.vue';
+import Mark from '../components/ui/Mark.astro';
+import Ornament from '../components/ui/Ornament.astro';
 import { formatLogDate, latestLogDate } from '../lib/log-date';
 
 const entry = await getEntry('docs', 'philosophy');
@@ -15,23 +18,41 @@ if (!entry) throw new Error('docs entry "philosophy" not found: is ../PHILOSOPHY
 const updated = latestLogDate(entry.body ?? '');
 ---
 
-<DocPage entry={entry}>
+<DocPage entry={entry} numbered>
   <section slot="hero" class="hero" aria-label="Freehold">
-    <p class="font-serif text-display font-[560] tracking-[-0.03em] text-fg">Freehold</p>
-    <p class="mt-5 max-w-measure font-serif text-lead text-fg italic sm:mt-6">
-      Freehold software is software you own outright. Subscription software is leasehold.
-    </p>
-    <p class="mt-3 max-w-measure font-sans text-ui text-muted">
-      A philosophy, a standard, and a registry for software that belongs to the people who use it.
-    </p>
-    {
-      updated && (
-        <p class="label mt-6">
-          Working document, updated <time datetime={updated}>{formatLogDate(updated)}</time>
+    <div class="text-center">
+      <p class="eyebrow rise">
+        <span class="whitespace-nowrap">A philosophy ·</span>{' '}<span class="whitespace-nowrap">A standard ·</span>{' '}<span
+          class="whitespace-nowrap">A registry</span
+        >
+      </p>
+      <p
+        class="rise mt-6 inline-flex items-center gap-[0.22em] font-serif text-display font-[560] tracking-[-0.03em] text-fg sm:mt-8"
+        style="--rise-delay: 60ms"
+      >
+        <Mark class="size-[0.74em] shrink-0" />
+        <span>Freehold</span>
+      </p>
+      <div class="rise" style="--rise-delay: 120ms">
+        <Ornament class="mx-auto mt-7 max-w-[18rem] sm:mt-9" />
+      </div>
+      <div class="rise" style="--rise-delay: 180ms">
+        <p class="mx-auto mt-7 max-w-[32rem] font-serif text-lead text-balance text-fg italic sm:mt-9">
+          Freehold software is software you own outright. Subscription software is leasehold.
         </p>
-      )
-    }
-    <div class="hero-slot border-rule lg:mt-16 lg:border-t" data-slot="comparison">
+        <p class="mx-auto mt-4 max-w-[30rem] font-sans text-ui text-pretty text-muted">
+          A philosophy, a standard, and a registry for software that belongs to the people who use it.
+        </p>
+        {
+          updated && (
+            <p class="label mt-6">
+              Working document, updated <time datetime={updated}>{formatLogDate(updated)}</time>
+            </p>
+          )
+        }
+      </div>
+    </div>
+    <div class="hero-slot rule-double-t rule-double-b mt-12 sm:mt-16" data-slot="comparison">
       <HeroCompare client:visible />
     </div>
   </section>

@@ -25,11 +25,11 @@ function current(href: string): 'page' | 'true' | undefined {
 }
 ---
 
-<header class="site-header border-b border-rule bg-bg sm:sticky sm:top-0 sm:z-20" transition:animate="none">
+<header class="site-header paper rule-double-b sm:sticky sm:top-0 sm:z-20" transition:animate="none">
   <a class="skip-link" href="#main">Skip to content</a>
   <div
     class:list={[
-      'frame flex flex-wrap items-center justify-between gap-x-8 gap-y-2.5 pt-5 pb-3 sm:py-4',
+      'frame flex flex-wrap items-center justify-between gap-x-8 gap-y-2.5 pt-5 pb-4 sm:pt-4 sm:pb-5',
       wide && 'frame-wide',
     ]}
   >

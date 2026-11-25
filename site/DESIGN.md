@@ -6,7 +6,7 @@ Source of truth for values: `src/styles/global.css`. This document explains them
 
 ## Intent
 
-Freehold means owning your ground outright: the homestead, the deed, the commons kept for everyone. The site reads like a document, not a landing page. Typography carries the identity; color is paper, ink, and one field green. No boxes around reading text, no cards on the reading pages, no shadows, no gradients.
+Freehold means owning your ground outright: the homestead, the deed, the commons kept for everyone. The site reads like a document, not a landing page, and since 2026-11-25 it is set like an owner's deed: paper with a grain, small-capital labels, a rule-lozenge-rule ornament under titles, double rules between parts, Roman numerals on the philosophy's articles, a drop cap, the ten points as a Schedule, and a notary seal at the foot (see "The deed"). The vocabulary comes from the Freehold page on jippylong12.xyz, so the two read as one brand. Typography carries the identity; color is paper, ink, and one field green. No boxes around reading text, no cards on the reading pages, no shadows, no gradients.
 
 ## Type
 
@@ -34,7 +34,8 @@ Fluid sizes clamp between 375px and 1280px viewports. Each size token sets its o
 | `--text-lead` | `text-lead` | 20px to 24px | 1.4 | One-line definitions, post summaries. Often `italic`. |
 | `--text-body` | `text-body` | 17px to 19px | 1.65 | All reading text. Never below 17px. |
 | `--text-ui` | `text-ui` | 15px | 1.4 | Nav, table text, footer links, buttons. |
-| `--text-caption` | `text-caption` | 14px | 1.5 | Dates, metadata, badges, TOC on desktop. Smallest size allowed. |
+| `--text-caption` | `text-caption` | 14px | 1.5 | Dates, metadata, badges, TOC on desktop. Smallest size allowed for mixed-case text. |
+| `.eyebrow` (class) | `eyebrow` | 12px uppercase | 1.6 | Small-capital labels on the deed: the hero eyebrow, "Contents", "Leasehold" / "Freehold", "Schedule · The ten points". Public Sans 620, tracking 0.16em, muted (accent where it names the freehold side or the schedule). The one exception to the 14px floor: all-capitals at 12px have a cap height near 14px lowercase. Never for sentences. |
 
 Weights: 400 body, 560 to 620 for UI emphasis and the wordmark, 600 headings, 650 `strong`. Do not use 700+.
 
@@ -59,6 +60,8 @@ Light and dark follow `prefers-color-scheme` only. There is no toggle and no the
 | `--color-accent` | `#2d6141` field green | `#93c4a1` sage | Link hover, link underlines, current nav underline, blockquote rule, the mark. Never large fills. |
 | `--color-rule` | `#d8cfbe` | `#35302a` | Hairlines: header border, table rows, `hr`, TOC rail. Decorative only (it is not text). |
 | `--color-focus` | `#2d6141` | `#93c4a1` | Focus outline. |
+
+**Paper grain.** `--grain` is a static fractal-noise SVG (a data URI, so no request) tinted brown at about 4% in light and parchment at about 2% in dark. `body` and `.paper` (the sticky header) lay it over `--color-bg`. It is texture, not a color: contrast is computed on the flat tokens and the grain moves them by under 2%. Never animate it, never raise its strength.
 
 Dark is designed, not inverted: a warm loam black instead of gray, parchment text instead of white, and a lighter sage so the accent keeps its weight without glowing.
 
@@ -120,17 +123,18 @@ Rhythm inside `.prose` is in `em` and handled by the class (paragraphs 1.25em ap
 
 - Wordmark at left: the mark (the F seal, `ui/Mark.astro`) plus "Freehold" in `font-serif`, 22px, weight 620, tracking -0.012em, ink color, no underline, `transition:name="wordmark"`. It links to `/`.
 - Nav at right, `font-sans text-ui`: Philosophy `/`, Standard `/standard`, Feed `/feed`, Marketplace `/marketplace`. At rest `text-muted`; hover `text-fg` with a rule-colored underline; current page `text-fg`, weight 560, and a 2px accent underline offset 0.45em. `aria-current="page"` on an exact match, `aria-current="true"` on a child route (for example `/feed/<slug>` marks Feed).
-- From 640px up the header is sticky (`top-0`), solid `bg-bg`, with a 1px `border-rule` bottom. No blur, no shadow, no shrink-on-scroll.
+- From 640px up the header is sticky (`top-0`), `.paper` (background plus grain), with a double rule at the bottom (`.rule-double-b`). No blur, no shadow, no shrink-on-scroll.
 - Below 640px (the 375px rule): the header is not sticky, so it never eats reading height. The wordmark sits on the first row and the nav on a second row, all four items visible at 375px (measured: 364px of nav in a 375px viewport with gutters). If a future item no longer fits, the nav row scrolls horizontally (`overflow-x-auto` is already set); it never wraps into a menu, and there is no hamburger.
 - A "Skip to content" link is the first focusable element; it appears only on focus.
 - Heading anchors get `scroll-margin-top: var(--header-offset)` (1.5rem below 640px, 5.5rem above), set globally. Anything you make linkable by `id` inherits it via `:target`.
 
 ## Footer
 
-Top hairline (`border-rule`), `mt-24 sm:mt-32` above it. Two blocks:
+Top double rule (`.rule-double-t`), `mt-24 sm:mt-32` above it. Three blocks:
 
 1. Text, max measure: the definition "Freehold software is software you own outright." in `font-serif text-lead text-fg`; then "Freehold is a status, not a brand. The standard is public; this is one registry." in serif italic; then the receipts line from `site.costs` as a `.label` (sans, caption, muted, tabular numbers): "Built at cost: $0 a month on Cloudflare Pages, $8.50 a year for the domain."
 2. Links, `font-sans text-ui text-muted` with muted underlines: Source, RSS, Registry JSON, Writing CC BY-SA 4.0, code MIT. On wide pages from `md` up they stack right-aligned in a second column; otherwise they wrap in a row under the text.
+3. The seal (`ui/Seal.astro`, class `stamp`): below 640px it sits under the links at 6rem; from 640px it takes the right column beside text and links (7rem); on wide pages from `md` it is the third column (8rem).
 
 Do not add newsletter boxes, social icons, or "made with" badges.
 
@@ -150,21 +154,24 @@ Wrap rendered Markdown in `<article class="prose">` inside a measure-width colum
 
 ## Hero (`/`)
 
-The shape is in `src/pages/index.astro`; JIP-1333 keeps it and replaces only the copy and data.
+The shape is in `src/pages/index.astro`: the deed's title block, centered over the wide frame, then the comparison between double rules.
 
 ```
-section.hero (aria-label="Freehold"), left aligned to the wide frame
-  p   "Freehold"                         font-serif text-display font-[560] tracking-[-0.03em] text-fg
-  p   one-line definition                mt-5 sm:mt-6 max-w-measure font-serif text-lead italic text-fg
-  p   sub-line (one sentence)            mt-3 max-w-measure font-sans text-ui text-muted
-  p.label  "Updated <time>"              mt-6, date from the PHILOSOPHY.md Log, day-first long form via formatLogDate ("20 October 2026")
-  div.hero-slot[data-slot=comparison]    lg:mt-16 lg:border-t border-rule; the M3 comparison island mounts here
-div.doc-grid                             mt-10 sm:mt-12 lg:mt-14
+section.hero (aria-label="Freehold")
+  div.text-center
+    p.eyebrow.rise          "A philosophy · A standard · A registry" (each part nowrap)
+    p.rise (60ms)           Mark (0.74em) + "Freehold"   font-serif text-display font-[560] tracking-[-0.03em]
+    div.rise (120ms)        Ornament, max-w-[18rem], centered, mt-7 sm:mt-9
+    div.rise (180ms)        definition (text-lead italic, max-w-[32rem], balanced)
+                            sub-line (font-sans text-ui text-muted, max-w-[30rem])
+                            p.label "Working document, updated <time>" (formatLogDate, day-first)
+  div.hero-slot.rule-double-t.rule-double-b   mt-12 sm:mt-16; HeroCompare mounts here, py-10 sm:py-12
+div.doc-grid                                  mt-12 sm:mt-14 lg:mt-16
 ```
 
 - The masthead "Freehold" is a `<p>`, not a heading: the page's `<h1>` is the document's own title ("The Philosophy (Working Document)"), rendered first inside `.prose`. One `h1` per page.
 - No buttons, no call to action, no illustration, no background color in the hero.
-- The M3 animated comparison sits inside `.hero-slot`, full wide-frame width, below the hairline, with its own `mt-10` and a fixed height reserved before hydration (no layout shift). It is the only animated element in the hero.
+- The comparison labels "Leasehold" and "Freehold" are `.eyebrow` (Freehold in `text-accent`). The panels keep their own settle-and-count motion; the four `.rise` steps are the only other motion in the hero.
 
 ## Table of contents (`/` and `/standard`)
 
@@ -172,8 +179,26 @@ Shape in `src/pages/index.astro`. The page passes `wide` to `BaseLayout`.
 
 - Grid from `lg`: `lg:grid lg:grid-cols-[var(--container-toc)_minmax(0,var(--container-measure))] lg:gap-x-16`. Left column `nav.toc` (`aria-label="Contents"`), right column the `article.prose`.
 - One copy of the entries, in `nav.toc-nav[aria-label="Contents"]` holding a single `<details class="toc">`. Only h2 and h3 appear. No scroll-spy highlight in v1 (it would need JavaScript).
-- Below `lg`: the `<details>` is closed by default with `<summary>Contents</summary>`, placed above the article between `border-y border-rule` hairlines, `font-sans text-ui`, depth 3 indented `pl-4`. Each link is `block py-2`, so a tap target is at least 2rem tall.
-- From `lg`: the `<details>` is `sticky top-[var(--header-offset)]`, `font-sans text-caption`, the `summary` is hidden and the content is forced open with `.toc::details-content { content-visibility: visible }` (inside `@supports selector(::details-content)`; a browser without it keeps the collapsible summary, which still works). A `.label` heading "Contents" in `text-fg` weight 600 shows only here. The `<ol>` has `border-l border-rule`, items `pl-4` (depth 2) or `pl-7` (depth 3), links `text-muted` with no underline, hover `text-fg`.
+- Below `lg`: the `<details>` is closed by default with `<summary>Contents</summary>`, placed above the article between double rules (`.rule-double-t .rule-double-b`), `font-sans text-ui`, depth 3 indented `pl-4`. Each link is `block py-2`, so a tap target is at least 2rem tall.
+- From `lg`: the `<details>` is `sticky top-[var(--header-offset)]`, `font-sans text-caption`, the `summary` is hidden and the content is forced open with `.toc::details-content { content-visibility: visible }` (inside `@supports selector(::details-content)`; a browser without it keeps the collapsible summary, which still works). An `.eyebrow` heading "Contents" in `text-fg` shows only here; the double rules give way to the rail. The `<ol>` has `border-l border-rule`, items `pl-4` (depth 2) or `pl-7` (depth 3), links `text-muted` with no underline, hover `text-fg`.
+
+- Numbered pages (`DocPage numbered`, only `/` today): each h2 entry carries its article's Roman numeral in a 2.4em column (serif italic, accent, `lib/roman.ts`), and h3 entries align with the titles. `/standard` is not numbered: FRAMEWORK.md already numbers its Parts.
+
+## The deed
+
+Shared pieces, all in `global.css` or `src/components/ui/`. Use these instead of inventing new decoration.
+
+| Piece | Where | Rule |
+| --- | --- | --- |
+| `.paper` | sticky header | `--color-bg` plus `--grain`. `body` already has it. |
+| `.eyebrow` | labels | See Type. Small capitals only, never sentences. |
+| `Ornament.astro` | under titles | Rule, 7px accent lozenge, rule. `align="center"` (hero, `max-w-[18rem]`) or `align="start"` (lozenge first, then a rule, `max-w-[12rem]`) under the h1 on `/feed`, `/feed/<slug>`, `/marketplace`, `/404`. One per page. |
+| `.rule-double-t` / `.rule-double-b` | header, footer, hero slot, TOC (below lg), Schedule | Two 1px `rule` hairlines 3px apart, drawn with a border plus a pseudo-element. The element must not need its own `::before` (top) or `::after` (bottom). |
+| `.prose hr` | Markdown `---` | The same double rule, 3em above and below. |
+| `.prose-numbered` | `DocPage numbered` | Numbers h2s with CSS `counter(article, upper-roman)`: serif italic accent; above the heading below `lg`, hanging in the gutter (0.62em, 1rem off the text) from `lg`. The TOC numerals match. |
+| Drop cap | first paragraph of the first article (`.prose-numbered`) and of every post (`.prose-lede`) | Accent first letter, 3.4em, weight 600, two lines; the paragraph is `flow-root` so a one-line opener never indents the next paragraph. Nowhere else. |
+| Schedule | `/standard`, the `annex` slot of `DocPage` | `.eyebrow text-accent` "Schedule · The ten points" with a "Defined in Part 1 below" link to the Part 1 heading, then the ten titles from `lib/standard.ts` in two columns (`sm:grid-flow-col sm:grid-rows-5`), each row `border-t border-rule py-3`, the number in serif semibold accent with old-style figures. Between double rules; no fill, no box. |
+| `Seal.astro` | footer | The mark inside a notary ring whose legend reads "A status, not a brand" around the rim (Public Sans 600, accent). Rests at -8deg. Decorative (`aria-hidden`). Same seal as jippylong12.xyz/#/freehold. |
 
 ## Marketplace cards (`/marketplace`)
 
@@ -192,8 +217,10 @@ Motion serves reading: it orients (page transitions) and reveals (content arrivi
 | `--ease-out` (`ease-out` utility) | `cubic-bezier(0.22, 1, 0.36, 1)` | Everything entering or responding. |
 | `--ease-in-out` (`ease-in-out` utility) | `cubic-bezier(0.65, 0, 0.35, 1)` | The comparison island's back-and-forth only. |
 
-- **Allowed properties:** `opacity`, `transform` (translateY up to `--motion-distance`, no scale above 1.02, no rotation), `color`, `background-color`, `border-color`, `text-decoration-color`.
-- **Never moves:** body text once read, the header, the footer, the nav, the wordmark (except its view-transition morph), the TOC, tables, and anything the reader is interacting with. No parallax, no scroll hijacking, no looping or pulsing, no bounce or elastic easing, no animated gradients, no staggering longer than 4 items (60ms apart).
+- **Allowed properties:** `opacity`, `transform` (translateY up to `--motion-distance`, no scale above 1.02, no rotation; the seal's stamp is the one exception below), `color`, `background-color`, `border-color`, `text-decoration-color`.
+- **Hero rise (`.rise`, motion.css):** the four parts of the title block fade and lift `--motion-distance` over `--motion-slow`, delays 0, 60, 120, 180ms via `--rise-delay`. Fill is `backwards`, so nothing holds a transform after it lands.
+- **Seal stamp (`.stamp`, motion.css):** a scroll-driven animation (`animation-timeline: view()`, range entry 30% to 90%) presses the seal from -14deg at 1.15 scale to its resting -8deg at 1. It is the only rotation and the only scale above 1.02 on the site. Without view timelines, or with reduced motion, the seal simply rests at -8deg.
+- **Never moves:** body text once read, the header, the footer (except the seal's one stamp), the nav, the wordmark (except its view-transition morph), the TOC, tables, and anything the reader is interacting with. No parallax, no scroll hijacking, no looping or pulsing, no bounce or elastic easing, no animated gradients, no staggering longer than 4 items (60ms apart).
 - **Reveal on scroll (M3):** a block fades from `opacity: 0` and `translateY(var(--motion-distance))` to rest over `--motion-slow` with `--ease-out`, once, when 15% visible. Content must be visible without JavaScript: apply the hidden start state only from a class that the script adds, never in the static CSS.
 - **View transitions:** `<ClientRouter />` with Astro's default fade on `<main>`. The header and footer use `transition:animate="none"` (chrome does not fade); the wordmark carries `transition:name="wordmark"` so it morphs between the narrow and wide frames. Do not add `slide` or custom page animations.
 - **Reduced motion:** `global.css` sets every animation and transition to 0.01ms, removes delays, turns off smooth scrolling, and cancels all `::view-transition-*` animations under `prefers-reduced-motion: reduce`; Astro's router also skips its animations. Islands must additionally check `matchMedia('(prefers-reduced-motion: reduce)')` (or `@vueuse/motion`'s reduced-motion handling) and render the end state immediately. With reduced motion, nothing animates on load or on navigation.
@@ -218,12 +245,12 @@ Do:
 - Use the semantic tokens and the utilities named here.
 - Let type size, weight, and space make the hierarchy.
 - Keep reading text inside `max-w-measure`.
-- Reuse `StatusBadge`, `PointStatus`, `Mark`, `.label`, `.prose`, `.frame`.
+- Reuse `StatusBadge`, `PointStatus`, `Mark`, `Ornament`, `Seal`, `.label`, `.eyebrow`, `.prose`, `.frame`, and the double rules.
 - Check both schemes at 375px and 1280px before you call UI done.
 
 Do not:
 
-- Add colors, fonts, shadows, gradients, blur, or rounded cards.
+- Add colors, fonts, shadows, gradients, blur, or rounded cards. Add more deed decoration than "The deed" lists (a second ornament on a page, drop caps elsewhere, a sheet frame or shadow around the page).
 - Box reading text, zebra-stripe tables, or put icons next to headings.
 - Load anything from another origin (fonts, scripts, images). The one standing exception is the Google Analytics 4 tag in `BaseLayout.astro`, production builds only, with its hosts named in `public/_headers`.
 - Add a theme toggle, a hamburger menu, or JavaScript for layout.

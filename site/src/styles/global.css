@@ -83,6 +83,21 @@
   }
 }
 
+/*
+ * Paper grain: static fractal noise tinted to the scheme, laid over --color-bg on the
+ * body and the sticky header. It is a texture, not a color: every contrast pair in
+ * DESIGN.md is computed on the flat token and the grain shifts it by under 2%.
+ */
+:root {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.29 0 0 0 0 0.2 0 0 0 0.11 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.89 0 0 0 0 0.8 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
 /* Motion tokens (plain variables, no utilities). Rules in DESIGN.md, "Motion". */
 :root {
   --motion-fast: 140ms;
@@ -115,6 +130,7 @@
     display: flex;
     flex-direction: column;
     background-color: var(--color-bg);
+    background-image: var(--grain);
     color: var(--color-fg);
     font-family: var(--font-serif);
     font-size: var(--text-body);
@@ -418,10 +434,11 @@
     color: var(--color-fg);
   }
 
+  /* The rule between a deed's parts: two hairlines, 3px apart. */
   .prose hr {
     border: 0;
-    height: 1px;
-    background-color: var(--color-rule);
+    height: 5px;
+    border-block: 1px solid var(--color-rule);
     margin-block: 3em;
   }
 
@@ -498,5 +515,121 @@
     max-width: 100%;
     height: auto;
     border-radius: var(--radius-md);
+  }
+
+  /* ---------------------------------------------------------------------------
+   * The deed vocabulary (DESIGN.md, "The deed"). Shared with the Freehold page on
+   * jippylong12.xyz, which set it first.
+   * ------------------------------------------------------------------------- */
+
+  /* Paper surface for chrome that sits over the page (the sticky header). */
+  .paper {
+    background-color: var(--color-bg);
+    background-image: var(--grain);
+  }
+
+  /* Small capitals in Public Sans: the labels written on the deed. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    font-weight: 620;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Two hairlines 3px apart, as a top or bottom edge. */
+  .rule-double-t,
+  .rule-double-b {
+    position: relative;
+  }
+
+  .rule-double-t {
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .rule-double-b {
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .rule-double-t::before,
+  .rule-double-b::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    height: 1px;
+    background-color: var(--color-rule);
+    pointer-events: none;
+  }
+
+  .rule-double-t::before {
+    top: 3px;
+  }
+
+  .rule-double-b::after {
+    bottom: 3px;
+  }
+
+  /*
+   * Article numerals: an opt-in class on .prose that numbers its h2s in Roman
+   * capitals. Below lg the numeral sits above the heading; from lg it hangs in the
+   * gutter between the table of contents and the text.
+   */
+  .prose-numbered {
+    counter-reset: article;
+  }
+
+  .prose-numbered > h2 {
+    counter-increment: article;
+    position: relative;
+  }
+
+  .prose-numbered > h2::before {
+    content: counter(article, upper-roman);
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 1.0625rem;
+    line-height: 1;
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--color-accent);
+  }
+
+  @media (min-width: 64rem) {
+    .prose-numbered > h2::before {
+      position: absolute;
+      right: calc(100% + 1rem);
+      top: 0.18em;
+      margin: 0;
+      font-size: 0.62em;
+      white-space: nowrap;
+    }
+  }
+
+  /*
+   * A two-line drop cap: the first paragraph of the first article, or of a post.
+   * flow-root keeps the float inside its own paragraph, so a one-line opener never
+   * indents the paragraph after it.
+   */
+  .prose-numbered > h2:first-of-type + p,
+  .prose-lede > p:first-child {
+    display: flow-root;
+  }
+
+  .prose-numbered > h2:first-of-type + p::first-letter,
+  .prose-lede > p:first-child::first-letter {
+    float: left;
+    font-size: 3.4em;
+    line-height: 0.82;
+    font-weight: 600;
+    padding: 0.07em 0.1em 0 0;
+    color: var(--color-accent);
+  }
+
+  /* The seal sits at -8deg, as if pressed by hand. */
+  .seal {
+    transform: rotate(-8deg);
   }
 }

@@ -30,3 +30,49 @@
     }
   }
 }
+
+/*
+ * .rise: the title block of "/" arriving on load, in order. Each part sets its own
+ * --rise-delay (0, 60, 120, 180ms: four steps at most, 60ms apart). The fill is backwards only,
+ * so nothing keeps an animated transform once it lands.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise-in var(--motion-slow) var(--ease-out) backwards;
+    animation-delay: var(--rise-delay, 0ms);
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--motion-distance));
+    }
+  }
+}
+
+/*
+ * .stamp: the footer seal pressing down as it scrolls into view, driven by the scroll
+ * position (no script). It lands at its resting -8deg; without view timelines, or
+ * with reduced motion, it simply sits there.
+ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .stamp {
+      animation: stamp-down var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 30% entry 90%;
+    }
+
+    @keyframes stamp-down {
+      from {
+        opacity: 0;
+        transform: rotate(-14deg) scale(1.15);
+      }
+
+      to {
+        opacity: 1;
+        transform: rotate(-8deg) scale(1);
+      }
+    }
+  }
+}

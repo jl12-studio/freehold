@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostMeta from '../../components/feed/PostMeta.astro';
 import { publishedPosts, slugFromId } from '../../lib/feed';
 import { site } from '../../config';
+import Ornament from '../../components/ui/Ornament.astro';
 
 export async function getStaticPaths() {
   const posts = publishedPosts(await getCollection('feed'), import.meta.env.DEV);
@@ -22,9 +23,10 @@ const linkClass =
     <header>
       <PostMeta date={post.data.date} draft={post.data.draft} />
       <h1 transition:name={`post-title-${slugFromId(post.id)}`} class="mt-1.5 w-fit max-w-full font-serif text-h1 font-semibold tracking-[-0.015em] text-fg">{post.data.title}</h1>
+      <Ornament align="start" class="mt-6 max-w-[12rem]" />
     </header>
 
-    <div class="prose mt-8 sm:mt-10">
+    <div class="prose prose-lede mt-8 sm:mt-10">
       <Content />
     </div>
 

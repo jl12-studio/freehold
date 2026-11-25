@@ -1,12 +1,18 @@
 ---
 /*
  * The standard page: renders FRAMEWORK.md from the repo root, never a copy.
+ * The annex above the document is the Schedule: the ten point titles at a
+ * glance (from lib/standard.ts), linking down to Part 1 where they are defined.
  */
-import { getEntry } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 import DocPage from '../components/docs/DocPage.astro';
+import { STANDARD_POINTS } from '../lib/standard';
 
 const entry = await getEntry('docs', 'framework');
 if (!entry) throw new Error('docs entry "framework" not found: is ../FRAMEWORK.md loaded?');
+
+const { headings } = await render(entry);
+const partOne = headings.find((heading) => heading.depth === 2 && heading.text.startsWith('Part 1'));
 ---
 
 <DocPage
@@ -18,4 +24,33 @@ if (!entry) throw new Error('docs entry "framework" not found: is ../FRAMEWORK.m
     Part 0 and Part 1 below are the public definition of Freehold. Anyone whose software meets them may call it Freehold; no
     permission needed. Parts 2 to 4 are how we build.
   </p>
+
+  <section slot="annex" class="schedule rule-double-t rule-double-b pt-7 pb-5 sm:pt-8 sm:pb-6" aria-labelledby="schedule-heading">
+    <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+      <p id="schedule-heading" class="eyebrow text-accent">Schedule · The ten points</p>
+      {
+        partOne && (
+          <a href={`#${partOne.slug}`} class="font-sans text-caption text-muted underline decoration-muted/40 underline-offset-[0.3em] hover:text-accent hover:decoration-accent">
+            Defined in Part 1 below
+          </a>
+        )
+      }
+    </div>
+    <ol role="list" class="mt-5 grid sm:grid-flow-col sm:grid-cols-2 sm:grid-rows-5 sm:gap-x-12">
+      {
+        STANDARD_POINTS.map(({ point, title }) => (
+          <li class="flex items-baseline gap-3 border-t border-rule py-3">
+            <span class="schedule-num w-[1.6em] shrink-0 text-right font-serif font-semibold text-accent" aria-hidden="true">{point}</span>
+            <span class="font-serif text-body leading-snug text-fg">{title}.</span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
 </DocPage>
+
+<style>
+  .schedule-num {
+    font-variant-numeric: oldstyle-nums tabular-nums;
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+/**
+ * The closing seal: the Freehold mark, unchanged, pressed inside a notary ring whose
+ * legend is the site's own line, "a status, not a brand". Decorative only. Same seal
+ * as the Freehold page on jippylong12.xyz.
+ */
+import Mark from './Mark.astro';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+// Ends in a no-break space so the gap at the seam is not collapsed away.
+const LEGEND = 'A STATUS, NOT A BRAND · A STATUS, NOT A BRAND · ';
+---
+
+<div class:list={['seal relative aspect-square', className]} aria-hidden="true">
+  <svg viewBox="0 0 120 120" class="absolute inset-0 size-full overflow-visible" focusable="false">
+    <defs>
+      <!-- Starts at the top and runs clockwise, so the legend reads around the rim. -->
+      <path id="seal-legend" d="M60,60 m0,-49 a49,49 0 1,1 0,98 a49,49 0 1,1 0,-98" fill="none"></path>
+    </defs>
+    <circle cx="60" cy="60" r="58.5" fill="none" stroke="var(--color-accent)" stroke-opacity="0.7" stroke-width="1"></circle>
+    <circle cx="60" cy="60" r="56" fill="none" stroke="var(--color-accent)" stroke-opacity="0.45" stroke-width="0.6"></circle>
+    <circle cx="60" cy="60" r="41" fill="none" stroke="var(--color-accent)" stroke-opacity="0.45" stroke-width="0.6"></circle>
+    <text style="fill: var(--color-accent); font-family: var(--font-sans)" font-size="7.4" font-weight="600">
+      <textPath href="#seal-legend" textLength="306" lengthAdjust="spacing">{LEGEND}</textPath>
+    </text>
+  </svg>
+  <Mark class="absolute top-1/2 left-1/2 size-[44%] -translate-x-1/2 -translate-y-1/2" />
+</div>

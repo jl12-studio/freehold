@@ -3,13 +3,15 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostList from '../../components/feed/PostList.astro';
 import { publishedPosts } from '../../lib/feed';
+import Ornament from '../../components/ui/Ornament.astro';
 
 const posts = publishedPosts(await getCollection('feed'), import.meta.env.DEV);
 ---
 
 <BaseLayout title="Feed" description="Where Marcus thinks out loud as the Freehold philosophy evolves.">
   <h1 class="font-serif text-h1 font-semibold tracking-[-0.015em] text-fg">Feed</h1>
-  <p class="mt-4 max-w-measure font-serif text-lead text-fg italic">
+  <Ornament align="start" class="mt-5 max-w-[12rem]" />
+  <p class="mt-5 max-w-measure font-serif text-lead text-fg italic">
     Where I think out loud as the philosophy evolves. The raw captures in the repo are the seed; these are the digested versions.
   </p>
   <p class="mt-3 font-sans text-ui text-muted">

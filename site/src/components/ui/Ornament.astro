@@ -1,0 +1,41 @@
+---
+/**
+ * Rule, lozenge, rule: the divider under a deed's title. Decorative.
+ * align="center" draws a rule on both sides; align="start" puts the lozenge first.
+ */
+interface Props {
+  align?: 'center' | 'start';
+  class?: string;
+}
+const { align = 'center', class: className } = Astro.props;
+---
+
+<div class:list={['ornament', align === 'start' && 'ornament-start', className]} aria-hidden="true"><span></span></div>
+
+<style>
+  .ornament {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .ornament::before,
+  .ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-rule);
+  }
+
+  .ornament-start::before {
+    display: none;
+  }
+
+  .ornament span {
+    width: 7px;
+    height: 7px;
+    flex: none;
+    transform: rotate(45deg);
+    background-color: var(--color-accent);
+  }
+</style>
